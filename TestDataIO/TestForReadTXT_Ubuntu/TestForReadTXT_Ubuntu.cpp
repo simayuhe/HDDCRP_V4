@@ -1,13 +1,7 @@
-// TestForReadTXT_Windows.cpp : 定义控制台应用程序的入口点。
-//借鉴RFT中的load data,读取doc.txt中的n行数据，并写入vector中,这里不进行运算，直接将xy坐标写回名为result_1.txt的文件中。
-//数据在txt中的存放格式是 
-//5 [3,0](448,26,11)(447,26,13)(447,27,16)(447,28,17)(448,28,20)
-//9 [0, 2](282, 101, 1436)(282, 102, 1437)(283, 102, 1440)(283, 101, 1442)(284, 101, 1445)(285, 101, 1447)(284, 101, 1448)(283, 101, 1451)(282, 101, 1455)
-//3 [0,0](407,37,678)(406,37,682)(405,37,684)
-//其中第一个代表元素个数，[]代表起止点，（x,y,t）代表轨迹信息
-
+// TestForReadTXT_Ubuntu.cpp 
 #include <iostream>
 #include <vector>
+#include <stdio.h>
 
 using namespace std;
 
@@ -28,7 +22,7 @@ public:
 	vector<Point> d_point;
 
 };
-int main(int argc, _TCHAR* argv[])
+int main()
 {
 	size_t d, i;
 	int length, x, y, t, s1, s2, numTrk = 0;
