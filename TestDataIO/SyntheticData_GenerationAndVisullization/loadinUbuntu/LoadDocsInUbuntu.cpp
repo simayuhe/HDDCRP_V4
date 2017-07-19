@@ -37,7 +37,7 @@ int main()
 		for (int f = 0; f < 25; f++)
 		{
 			
-			fprintf(fileptr, "%d ", freq[f]);
+			fprintf(fileptr, "%d ", ff[f]);
 		}
 		fclose(fileptr);
 	}
