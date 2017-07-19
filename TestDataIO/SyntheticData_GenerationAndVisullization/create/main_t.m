@@ -1,10 +1,10 @@
-%作为临时主函数，用来调试和调用各个正在编写的函数
+%锟斤拷为锟斤拷时锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟皆和碉拷锟矫革拷锟斤拷锟斤拷锟节憋拷写锟侥猴拷锟斤拷
 close all;
 clear all;
 clc;
 topic_file='topics.txt';
-num_doc=36;
-n_words=100;
+num_doc=360;
+n_words=1000;
 generate_docs( topic_file,num_doc,n_words );
 % filename = 'doc_2.txt';
 % dict_size = 25;

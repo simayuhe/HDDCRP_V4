@@ -1,30 +1,30 @@
 function [  ] = generate_docs( topic_file,num_doc,n_words )
-%GENERATE_DOCS ´Ë´¦ÏÔÊ¾ÓÐ¹Ø´Ëº¯ÊýµÄÕªÒª
-%   ´Ë´¦ÏÔÊ¾ÏêÏ¸ËµÃ÷
+%GENERATE_DOCS ï¿½Ë´ï¿½ï¿½ï¿½Ê¾ï¿½Ð¹Ø´Ëºï¿½ï¿½ï¿½ï¿½ÕªÒª
+%   ï¿½Ë´ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ï¸Ëµï¿½ï¿½
 topics=load(topic_file);
-[num_topics,num_words]=size(topics);%ÕâÀïµÄnum_wordsÖ¸µÄÊÇ×Öµä³¤¶È
+[num_topics,num_words]=size(topics);%ï¿½ï¿½ï¿½ï¿½ï¿½num_wordsÖ¸ï¿½ï¿½ï¿½ï¿½ï¿½Öµä³¤ï¿½ï¿½
 docs=cell(num_doc,1);
 for i=1:1:num_doc
-    %¶ÔÓÚÃ¿ÆªÎÄµµÆä»ìºÏËùÓÃµÄÖ÷Ìâ¼°È¨ÖØÊÇÏàÍ¬µÄ
-    doc_name=['..\data\doc_' num2str(i) '.txt'];%ÕâÀï²ÉÓÃÃ¿ÆªÎÄµµ±£´æÒ»´ÎµÄ·½Ê½
+    %ï¿½ï¿½ï¿½ï¿½Ã¿Æªï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½â¼°È¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½
+    doc_name=['../data/doc_' num2str(i) '.txt'];%ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Æªï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ÎµÄ·ï¿½Ê½
     fid=fopen(doc_name,'wt');
     
-    num_TopicSelected=randi(num_topics);%Ö÷ÌâÊýÄ¿
+    num_TopicSelected=randi(num_topics);%ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿
     TopicSelected=randperm(num_topics,num_TopicSelected);
     temp=rand(1,num_TopicSelected);
     Weight=temp/sum(temp);
     clear temp;
     TopicDistribution=Weight*topics(TopicSelected,:);
-    TopicDistribution=TopicDistribution/sum(TopicDistribution);%¹éÒ»»¯µÃµ½ÐÂµÄÀëÉ¢·Ö²¼
+    TopicDistribution=TopicDistribution/sum(TopicDistribution);%ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ãµï¿½ï¿½Âµï¿½ï¿½ï¿½É¢ï¿½Ö²ï¿½
     for j=1:1:n_words
-        %ÀëÉ¢·Ö²¼ÖÐ²ÉÑùn_words¸öµ¥´Ê×é³ÉÎÄµµ
+        %ï¿½ï¿½É¢ï¿½Ö²ï¿½ï¿½Ð²ï¿½ï¿½ï¿½n_wordsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½
         words=randmult(TopicDistribution);
         docs{i,1}=[docs{i,1} words];
-        fprintf(fid,'%g\t',words);%Ð´ÈëÎÄ¼þ
+        fprintf(fid,'%g\t',words);%Ð´ï¿½ï¿½ï¿½Ä¼ï¿½
         clear words;
     end
     
-    fclose(fid);%¹Ø±ÕÎÄ¼þ
+    fclose(fid);%ï¿½Ø±ï¿½ï¿½Ä¼ï¿½
 end
 save ('docs76.mat','docs');
 
