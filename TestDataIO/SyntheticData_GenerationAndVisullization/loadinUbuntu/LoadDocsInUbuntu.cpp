@@ -24,12 +24,22 @@ int main()
 		fileptr = fopen(filename, "r");
 		
 		vector<int> doc;
+		int ff[25] = { 0 };
 		while (fscanf(fileptr, "%d", &word) != EOF)
 		{
-			
+			ff[word - 1] = ff[word - 1] + 1;
 			doc.push_back(word);
 		}
 		corpus.push_back(doc);
+		fclose(fileptr);
+		sprintf(filename, "..//result/freqVCSerial_%d.txt", d);
+		fileptr = fopen(filename, "w");
+		for (int f = 0; f < 25; f++)
+		{
+			
+			fprintf(fileptr, "%d ", freq[f]);
+		}
+		fclose(fileptr);
 	}
 	cout <<"corpus.size()="<< corpus.size() << endl;
 	return 0;
