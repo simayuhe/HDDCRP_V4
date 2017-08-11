@@ -1,0 +1,11 @@
+function [phog H] = compute_PHoG(x,n1,n2)
+len = size(x,1);
+len_h = round(len/2);
+x1 = x(1:len_h,:);
+x2 = x(len_h:end,:);
+[hog1 H1] = compute_HoG(x1,n1);
+[hog2 H2] = compute_HoG(x2,n1);
+[hog3 H3] = compute_HoG(x,n2);
+phog = [hog1 hog2 .5*hog3];
+H = [H1 H2 H3];
+phog = phog / sum(phog);
