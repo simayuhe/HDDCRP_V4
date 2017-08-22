@@ -1,4 +1,4 @@
-function run_HDPHMM_inference(A_ALPHA,saveDir,trial_vec,codes,K,Kc,Kz,Ks,init_c,init_z,num_iter,resample_kappa,varargin)
+function run_HDPHMM_inference(A_EBSILON,saveDir,trial_vec,codes,K,Kc,Kz,Ks,init_c,init_z,num_iter,resample_kappa,varargin)
 	change_model = 1;
     sample_c = 1;
 	if ~isempty(varargin)
@@ -55,14 +55,14 @@ model.obsModel.mixtureType = 'infinite';
 
 % Sticky HDP-HMM parameter settings:
 %model.HMMmodel.params.a_alpha=1;  % affects \pi_z%
-model.HMMmodel.params.a_alpha=A_ALPHA;  % affects \pi_z
+model.HMMmodel.params.a_alpha=500;  % affects \pi_z
 model.HMMmodel.params.b_alpha=0.01;
 model.HMMmodel.params.a_gamma=1;  % global expected # of HMM states (affects \beta)
 model.HMMmodel.params.b_gamma=0.01;
 model.HMMmodel.params.a_gamma0 = 1;
 model.HMMmodel.params.b_gamma0 = 0.01;
 if settings.Kc>1
-    model.HMMmodel.params.a_epsilon = 1;
+    model.HMMmodel.params.a_epsilon = A_EBSILON;
     model.HMMmodel.params.b_epsilon = 0.01;
 end
 if settings.Ks>1

@@ -6,10 +6,10 @@ addpath_script
 
 % result_dir = './results/CASIA2/';
 % raw_data_file = './data/CASIA/CASIA_tjc_small.mat';
-result_dir = './results/CASIA/';
+result_dir = './results_1000/CASIA/';
 raw_data_file = './data/CASIA/CASIA_tjc.mat';%ԭʼ��ݼ�
-%myiter=[0.001 0.01 0.1 1 10 100 1000];
-myiter=[1 500 1000 1500 2000 2500 3000];
+myiter=[1 10 100 1000];
+%myiter=[1 500 1000 1500 2000 2500 3000];
 %matlabpool('open',4);
 for myi=1:1:length(myiter)
     for myj=1:3
@@ -103,8 +103,8 @@ for myi=1:1:length(myiter)
         trial_vec = 1;
         resample_kappa = 1;
         num_iter = 3000;
-        A_ALPHA=myiter(myi);
-        run_HDPHMM_inference(A_ALPHA,save_dir,trial_vec,codes,K,Kc,Kz,Ks,init_c,init_z,num_iter,resample_kappa);
+        A_EBSILON=myiter(myi);
+        run_HDPHMM_inference(A_EBSILON,save_dir,trial_vec,codes,K,Kc,Kz,Ks,init_c,init_z,num_iter,resample_kappa);
         
         
         %%  
