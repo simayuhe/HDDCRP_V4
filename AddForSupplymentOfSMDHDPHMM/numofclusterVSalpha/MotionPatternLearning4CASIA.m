@@ -8,7 +8,7 @@ addpath_script
 % raw_data_file = './data/CASIA/CASIA_tjc_small.mat';
 result_dir = './results_1000/CASIA/';
 raw_data_file = './data/CASIA/CASIA_tjc.mat';%ԭʼ��ݼ�
-myiter=[1 10 100 1000];
+myiter=[1000];
 %myiter=[1 500 1000 1500 2000 2500 3000];
 %matlabpool('open',4);
 for myi=1:1:length(myiter)
