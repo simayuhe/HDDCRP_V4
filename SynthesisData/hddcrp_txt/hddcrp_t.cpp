@@ -1,20 +1,20 @@
 // hddcrp_t.cpp : 定义控制台应用程序的入口点。
 //
 //MY_DEBUG用来展示调试过程，在正常运行时要在stdafx.h中注释掉
-
+#pragma once
 #include "stdafx.h"
 #include "type_def.h"
-#include "HddCRP.hpp"
+#include "HDDCRP.hpp"
 
 #include <vector>
 #include <iostream>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <direct.h>
-#include "mat.h"
+//#include <direct.h>
+//#include "mat.h"
 #include "rand_utils.h"
 
-int _tmain(int argc, _TCHAR* argv[])
+int main(int argc, char * argv[])
 {
 #ifdef MY_DEBUG
 	printf("MY_DEBUG Model.\n");
@@ -28,20 +28,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	int size_voc_word = 25;//字典长度
 //各层中餐馆模型的离散度参数
 //注 ：1e-10 = 0.1
-	double alpha0 = 1;
-	double alpha1 = 0.01;//1e-200;
+	double alpha0 = 0.0001;
+	double alpha1 = 1e-250;//1e-200;
+	double alpha2 = 1e-200;
 //从num_burn_in开始对起止点标记进行Gibbs采样，总的采样次数是num_samples，间隔num_space 保存中间结果 
-	int num_burn_in = 1, num_samples = 100, num_space = 1;
+	int num_burn_in = 1, num_samples = 1000, num_space = 1;
 #ifdef LOAD_FROM_TXT
-//输入文件夹D:\code\mycode\HDDCRP_T\SyntheticData_GenerationAndVisullization\data
-	string inputfile = { "D:/code/mycode/HDDCRP_T/SyntheticData_GenerationAndVisullization/data/" };
+//输入文件夹D:\code\mycode\HDDCRP_T\SyntheticData_GenerationAndVisullization\data;/home1/yxkang_data/HDDCRP_v4/TestDataIO/SyntheticData_GenerationAndVisullization/data
+	string inputfile = { "/home1/yxkang_data/HDDCRP_v4/TestDataIO/SyntheticData_GenerationAndVisullization/data" };
 #else
 	string inputfile = { "D:/code/mycode/HDDCRP_T/SyntheticData_GenerationAndVisullization/data/synthetic_dat_76.mat" };
 
 #endif
 //输入文件夹D:\code\mycode\HDDCRP_T\result
-	string outputfile = {"D:/code/mycode/HDDCRP_T/result/"};
+	string outputfile = {"./result_360_1e4_1e250_1e200/"};
 
+mkdir("./result_360_1e4_1e250_1e200/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH); 
 
 ////*************************//
 
@@ -54,7 +56,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	alphas.clear();
 	alphas.push_back(alpha0);
 	alphas.push_back(alpha1);
-
+	alphas.push_back(alpha2);
 	string trainss_file = inputfile;
 	string link_file = inputfile;
 
@@ -72,7 +74,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	model.initialize();
 	Layer<DIST>::base.init_log_pos_vals(Layer<DIST>::trainss.size());
 	model.run_sampler();
-
 
 	return 0;
 }

@@ -1,48 +1,58 @@
 #pragma once
-#include "StdAfx.h"
+//#include "StdAfx.h"
 #include "type_def.h"
 #include "Multinomial.h"
 //#include "Tri_Mult.h"
 #include "rand_utils.h"
 #include <iostream>
 #include <math.h>
-#include <mat.h>
+#include <float.h>
+//#include <mat.h>
 #include <vector>
 #include <list>
+#include <limits.h> //20170824
 #include <algorithm>
 #include <functional>
 #include <time.h>
 #include <cstdlib>
-#include <io.h>//20170821
+#include <sys/io.h>//20170824
+//#include <fcntl.h>
+#include <dirent.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string>
+#include <string.h>
+#include <fnmatch.h>
 using namespace std;
 
 template<typename D> class Layer
 {
 public:
-	static D base;//´ú±íÁË±¾²ãµÄ»ù±¾Í³¼ÆĞÅÏ¢£¬ÎªÉ¶ÓÃstatic
-	static vector< list<QQ>::iterator > pos_classqq;//ÔÚ³öÏÖĞÂÀà±ğµÄÎ»ÖÃ´æ´¢Ö¸ÏòÕâ¸öĞÂÀàµÄclassqqµÄÖ¸Õë
+	static D base;//Å½ÃºÂ±Ã­ÃÃ‹Â±Å¸Â²Ã£ÂµÃ„Â»Ã¹Â±Å¸ÃÂ³Å’Ã†ÃÃ…ÃÂ¢Â£Â¬ÃÂªÃ‰Â¶Ã“Ãƒstatic
+	static vector< list<QQ>::iterator > pos_classqq;//Ã”ÃšÂ³Ã¶ÃÃ–ÃÃ‚Ã€Ã Â±Ã°ÂµÃ„ÃÂ»Ã–ÃƒÅ½Ã¦Å½Â¢Ã–Å¾ÃÃ²Ã•Ã¢Å¾Ã¶ÃÃ‚Ã€Ã ÂµÃ„classqqÂµÃ„Ã–Å¾Ã•Ã«
 	static vector< SS > trainss;
-	static vector<int> labels;//Õâ¸ölabelÊÇ¹ì¼£µÄ±êÇ©
+	static vector<int> labels;//Ã•Ã¢Å¾Ã¶labelÃŠÃ‡Â¹Ã¬Å’Â£ÂµÃ„Â±ÃªÃ‡Â©
 
 	static Layer<D> *top;
-	static Layer<D> *bottom;//ÔÚÍâ²ã½øĞĞÖ¸¶¨µÄ
+	static Layer<D> *bottom;//Ã”ÃšÃÃ¢Â²Ã£Å“Ã¸ÃÃÃ–Å¾Â¶Å¡ÂµÃ„
 
-	static double tot_lik;//ÓÃÀ´¼ÆËãËùÓĞÍÅ´Ø·Ö²¼µÄËÆÈ»Öµ£¬×îºó±È½Ï¸÷¸öiteration µÄ²ÉÑù½á¹ûÊ±ÓÃµ½
+	static double tot_lik;//Ã“ÃƒÃ€Å½Å’Ã†Ã‹Ã£Ã‹Ã¹Ã“ÃÃÃ…Å½Ã˜Â·Ã–Â²Å’ÂµÃ„Ã‹Ã†ÃˆÂ»Ã–ÂµÂ£Â¬Ã—Ã®ÂºÃ³Â±ÃˆÅ“ÃÅ¾Ã·Å¾Ã¶iteration ÂµÃ„Â²Ã‰Ã‘Ã¹Å“Ã¡Â¹Ã»ÃŠÂ±Ã“ÃƒÂµÅ“
 
-	static Layer<D> *cur_layer;//ÔÚrunsamplerÖĞÓÃÀ´±ê¼Çµ±Ç°²ã
-	static vector<bool> is_computed;//ÓÃÀ´±ê¼ÇÊÇ·ñ¼ÆËã¹ıÒÔÄ³Ò»µãÎª±ê¼ÇµÄÍÅ´ØµÄËÆÈ»£¬ÔÚrunsamplerÖĞ»áÖØ¸´ÇåÁã
-	//¶¨Òå¹ØÓÚ¶Ôlink²ÉÑùµÄÏà¹Ø±äÁ¿
-	static Layer<D> *cur_layer_sfl;//ÔÚrunsamplerÖĞÓÃÀ´±ê¼Çµ±Ç°²ã
-	static vector<bool> is_computed_sfl;//ÓÃÀ´±ê¼ÇÊÇ·ñ¼ÆËã¹ıÒÔÄ³Ò»µãÎª±ê¼ÇµÄÍÅ´ØµÄËÆÈ»£¬ÔÚrunsamplerÖĞ»áÖØ¸´ÇåÁã
+	static Layer<D> *cur_layer;//Ã”ÃšrunsamplerÃ–ÃÃ“ÃƒÃ€Å½Â±ÃªÅ’Ã‡ÂµÂ±Ã‡Â°Â²Ã£
+	static vector<bool> is_computed;//Ã“ÃƒÃ€Å½Â±ÃªÅ’Ã‡ÃŠÃ‡Â·Ã±Å’Ã†Ã‹Ã£Â¹Ã½Ã’Ã”Ã„Â³Ã’Â»ÂµÃ£ÃÂªÂ±ÃªÅ’Ã‡ÂµÃ„ÃÃ…Å½Ã˜ÂµÃ„Ã‹Ã†ÃˆÂ»Â£Â¬Ã”ÃšrunsamplerÃ–ÃÂ»Ã¡Ã–Ã˜Å¾Å½Ã‡Ã¥ÃÃ£
+	//Â¶Å¡Ã’Ã¥Â¹Ã˜Ã“ÃšÂ¶Ã”linkÂ²Ã‰Ã‘Ã¹ÂµÃ„ÃÃ Â¹Ã˜Â±Ã¤ÃÂ¿
+	static Layer<D> *cur_layer_sfl;//Ã”ÃšrunsamplerÃ–ÃÃ“ÃƒÃ€Å½Â±ÃªÅ’Ã‡ÂµÂ±Ã‡Â°Â²Ã£
+	static vector<bool> is_computed_sfl;//Ã“ÃƒÃ€Å½Â±ÃªÅ’Ã‡ÃŠÃ‡Â·Ã±Å’Ã†Ã‹Ã£Â¹Ã½Ã’Ã”Ã„Â³Ã’Â»ÂµÃ£ÃÂªÂ±ÃªÅ’Ã‡ÂµÃ„ÃÃ…Å½Ã˜ÂµÃ„Ã‹Ã†ÃˆÂ»Â£Â¬Ã”ÃšrunsamplerÃ–ÃÂ»Ã¡Ã–Ã˜Å¾Å½Ã‡Ã¥ÃÃ£
 	//
-	static void initialize_base();//°ÑËùÓĞµÄtrianss¶¼³õÊ¼»¯µ½Ò»¸öclassqqÖĞÈ¥
-	static double compute_tot_lik();//¼ÆËã¶¥²ãËùÓĞ²Í×ÀËÆÈ»ÖµµÄ×ÜºÍ
+	static void initialize_base();//Â°Ã‘Ã‹Ã¹Ã“ÃÂµÃ„trianssÂ¶Å’Â³ÃµÃŠÅ’Â»Â¯ÂµÅ“Ã’Â»Å¾Ã¶classqqÃ–ÃÃˆÂ¥
+	static double compute_tot_lik();//Å’Ã†Ã‹Ã£Â¶Â¥Â²Ã£Ã‹Ã¹Ã“ÃÂ²ÃÃ—Ã€Ã‹Ã†ÃˆÂ»Ã–ÂµÂµÃ„Ã—ÃœÂºÃ
+
 
 	Layer<D> *parent;
 	Layer<D> *child;
 
 	int num_groups;
-	double alpha_group;//±¾²ã²Í¹İÖ®¼äµÄÁ´½ÓÏÈÑé
+	double alpha_group;//Â±Å¸Â²Ã£Â²ÃÂ¹ÃÃ–Â®Å’Ã¤ÂµÃ„ÃÅ½Å“Ã“ÃÃˆÃ‘Ã©
 	double alpha_item;
 	double log_alpha_group;
 	double log_alpha_item;
@@ -50,7 +60,7 @@ public:
 	vector< vector<int> > group_candidates;
 	vector< vector<double> > log_group_priors;
 	vector< vector<double> > group_priors;
-	vector< vector< vector<int> > > item_candidates;//ÔÚÊ²Ã´µØ·½¸³ÖµµÄ£¿
+	vector< vector< vector<int> > > item_candidates;//Ã”ÃšÃŠÂ²ÃƒÅ½ÂµÃ˜Â·Å“Å¾Â³Ã–ÂµÂµÃ„Â£Â¿
 	vector< vector< vector<double> > > log_item_priors;
 	vector< vector< vector<double> > > item_priors;
 
@@ -59,7 +69,7 @@ public:
 	vector<int> old_tables; // tables each member belongs to
 	//vector<int> clusters;	
 	vector< vector<int> > links; // customers from which each member is visited
-	vector< list<int> > uni_tables; // unique tables in this restaurantÎªÊ²Ã´ÊÇlistÔªËØ×é³ÉµÄÏòÁ¿£¬Ã¿Ò»²ãÖĞ¿ÉÒÔÓĞ²»Í¬µÄ²Í¹İ
+	vector< list<int> > uni_tables; // unique tables in this restaurantÃÂªÃŠÂ²ÃƒÅ½ÃŠÃ‡listÃ”ÂªÃ‹Ã˜Ã—Ã©Â³Ã‰ÂµÃ„ÃÃ²ÃÂ¿Â£Â¬ÃƒÂ¿Ã’Â»Â²Ã£Ã–ÃÂ¿Ã‰Ã’Ã”Ã“ÃÂ²Â»ÃÂ¬ÂµÃ„Â²ÃÂ¹Ã
 	vector<int> uni_tables_vec;
 	vector< list<int>::iterator > pos_uni_tables; // positions of each table in "uni_tables"
 	vector< vector<int> > inds_items; // indices of all customers in this restaurant
@@ -90,11 +100,11 @@ public:
 	vector<double> log_probs_sampling;
 	double max_log_prob;
 
-	vector< STAT >::iterator cur_stat;//¶¨ÒåÃ¿Ò»²ãÖĞcur_item Ëù¶ÔÓ¦µÄ×ÓÊ÷µÄÍ³¼ÆÁ¿£¬ÔÚ·Ç¸ù½ÚµãµÄÊ±ºòÓëit_stat_curÏàÍ¬
-	//ÔÚ¸ù½ÚµãÊ±£¬it_stat_cur Ö¸Ê¾µÄÊÇ×îÉÏ²ãµÄÍ³¼Æ£¬°üº¬ÁËËùÓĞµÄlink£¬¶øÏ£ÍûÊ¹ÓÃ±¾²ãµÄcur_statÀ´¼ÇÂ¼±¾²ãÖĞ¸Ã½ÚµãµÄÍ³¼ÆÖµ£¬²»°üº¬ÉÏ²ãµÄlink
-	//ÕâÑù×öµÄÄ¿µÄÊÇÔÚ¶Ô¸ù½Úµã½øĞĞÖØĞÂ²ÉÑùÊ±£¬ÄÜ¹»½«¸ù½Úµã´¦µÄÍ³¼ÆÖµÓëÉÏ²ãÖĞlink´¦µÄÍ³¼ÆÖµ·Ö¿ª¼ÓÈë²»Í¬µÄÍÅ´ØÖĞÈ¥
+	vector< STAT >::iterator cur_stat;//Â¶Å¡Ã’Ã¥ÃƒÂ¿Ã’Â»Â²Ã£Ã–Ãcur_item Ã‹Ã¹Â¶Ã”Ã“Å ÂµÃ„Ã—Ã“ÃŠÃ·ÂµÃ„ÃÂ³Å’Ã†ÃÂ¿Â£Â¬Ã”ÃšÂ·Ã‡Å¾Ã¹Å“ÃšÂµÃ£ÂµÃ„ÃŠÂ±ÂºÃ²Ã“Ã«it_stat_curÃÃ ÃÂ¬
+	//Ã”ÃšÅ¾Ã¹Å“ÃšÂµÃ£ÃŠÂ±Â£Â¬it_stat_cur Ã–Å¾ÃŠÅ¸ÂµÃ„ÃŠÃ‡Ã—Ã®Ã‰ÃÂ²Ã£ÂµÃ„ÃÂ³Å’Ã†Â£Â¬Â°Ã¼ÂºÂ¬ÃÃ‹Ã‹Ã¹Ã“ÃÂµÃ„linkÂ£Â¬Â¶Ã¸ÃÂ£ÃÃ»ÃŠÂ¹Ã“ÃƒÂ±Å¸Â²Ã£ÂµÃ„cur_statÃ€Å½Å’Ã‡Ã‚Å’Â±Å¸Â²Ã£Ã–ÃÅ¾ÃƒÅ“ÃšÂµÃ£ÂµÃ„ÃÂ³Å’Ã†Ã–ÂµÂ£Â¬Â²Â»Â°Ã¼ÂºÂ¬Ã‰ÃÂ²Ã£ÂµÃ„link
+	//Ã•Ã¢Ã‘Ã¹Ã—Ã¶ÂµÃ„Ã„Â¿ÂµÃ„ÃŠÃ‡Ã”ÃšÂ¶Ã”Å¾Ã¹Å“ÃšÂµÃ£Å“Ã¸ÃÃÃ–Ã˜ÃÃ‚Â²Ã‰Ã‘Ã¹ÃŠÂ±Â£Â¬Ã„ÃœÂ¹Â»Å“Â«Å¾Ã¹Å“ÃšÂµÃ£Å½Å ÂµÃ„ÃÂ³Å’Ã†Ã–ÂµÃ“Ã«Ã‰ÃÂ²Ã£Ã–ÃlinkÅ½Å ÂµÃ„ÃÂ³Å’Ã†Ã–ÂµÂ·Ã–Â¿ÂªÅ’Ã“ÃˆÃ«Â²Â»ÃÂ¬ÂµÃ„ÃÃ…Å½Ã˜Ã–ÃÃˆÂ¥
 
-	//¶¨Òå¹ØÓÚ¶Ôlink²ÉÑùµÄÏà¹Ø±äÁ¿
+	//Â¶Å¡Ã’Ã¥Â¹Ã˜Ã“ÃšÂ¶Ã”linkÂ²Ã‰Ã‘Ã¹ÂµÃ„ÃÃ Â¹Ã˜Â±Ã¤ÃÂ¿
 	bool is_self_linked_sfl;
 	int idx_group_cur_sfl;
 	int old_customer_cur_sfl;
@@ -122,18 +132,18 @@ public:
 	double max_log_prob_sfl;
 	//
 
-	vector< vector<int> > trees;//Ã¿²ãµÄ³¤¶ÈÎª½ÚµãµÄ×ÜÊı£¬ÔÚÃ¿¸ö²Í×À½ÚµãÉÏ¼ÇÂ¼Õû¸öÊ÷µÄ½Úµã·Ö²¼
-	vector< vector<int> > orders;//¼ÆËãstats¹ı³ÌÖĞ£¬ÏÈºóË³Ğò£¬ÕâÀï´ÓÒ¶½Úµãµ½¸ù½Úµã
-	vector< vector<STAT> > stats;//ÓëtreeÖĞµÄ½ÚµãÏà¶ÔÓ¦£¬Í³¼ÆÁË¸Ã½ÚµãËùÓĞµÄ×ÓÊ÷µÄ¹Û²âÖµ
-	vector< int > inds_start;//³¤¶ÈÎª½ÚµãÊıÄ¿£¬±íÊ¾ÁË¸Ã½ÚµãµÄ×ÓÊ÷ÊÇ´Ótree.at(i)µÄÄÇ¸öÎ»ÖÃ¿ªÊ¼
-	vector< int > inds_end;//ÒªÓëtreeÅäºÏÊ¹ÓÃ
+	vector< vector<int> > trees;//ÃƒÂ¿Â²Ã£ÂµÃ„Â³â‚¬Â¶ÃˆÃÂªÅ“ÃšÂµÃ£ÂµÃ„Ã—ÃœÃŠÃ½Â£Â¬Ã”ÃšÃƒÂ¿Å¾Ã¶Â²ÃÃ—Ã€Å“ÃšÂµÃ£Ã‰ÃÅ’Ã‡Ã‚Å’Ã•Ã»Å¾Ã¶ÃŠÃ·ÂµÃ„Å“ÃšÂµÃ£Â·Ã–Â²Å’
+	vector< vector<int> > orders;//Å’Ã†Ã‹Ã£statsÂ¹Ã½Â³ÃŒÃ–ÃÂ£Â¬ÃÃˆÂºÃ³Ã‹Â³ÃÃ²Â£Â¬Ã•Ã¢Ã€Ã¯Å½Ã“Ã’Â¶Å“ÃšÂµÃ£ÂµÅ“Å¾Ã¹Å“ÃšÂµÃ£
+	vector< vector<STAT> > stats;//Ã“Ã«treeÃ–ÃÂµÃ„Å“ÃšÂµÃ£ÃÃ Â¶Ã”Ã“Å Â£Â¬ÃÂ³Å’Ã†ÃÃ‹Å¾ÃƒÅ“ÃšÂµÃ£Ã‹Ã¹Ã“ÃÂµÃ„Ã—Ã“ÃŠÃ·ÂµÃ„Â¹Ã›Â²Ã¢Ã–Âµ
+	vector< int > inds_start;//Â³â‚¬Â¶ÃˆÃÂªÅ“ÃšÂµÃ£ÃŠÃ½Ã„Â¿Â£Â¬Â±Ã­ÃŠÅ¸ÃÃ‹Å¾ÃƒÅ“ÃšÂµÃ£ÂµÃ„Ã—Ã“ÃŠÃ·ÃŠÃ‡Å½Ã“tree.at(i)ÂµÃ„Ã„Ã‡Å¾Ã¶ÃÂ»Ã–ÃƒÂ¿ÂªÃŠÅ’
+	vector< int > inds_end;//Ã’ÂªÃ“Ã«treeÃ…Ã¤ÂºÃÃŠÂ¹Ã“Ãƒ
 							
 	Layer(void){}
 	~Layer(void){}
-	void load_matlab_trainss(string& trainss_file);
+	//void load_matlab_trainss(string& trainss_file);//20170824
 	int check_txt_number(string & filepath);//20170821
 	void load_txt_trainss(string& trainss_file);//20170821
-	void load_matlab_link(string& link_file, double _group_alpha);
+	//void load_matlab_link(string& link_file, double _group_alpha);//20170824
 	void load_txt_link(string& link_file, double _group_alpha);//20170821
 	void collect_customers();
 	void initialize_link(int num_groups, int num_init_cls);
@@ -141,20 +151,20 @@ public:
 	void get_candidates();
 	int get_cluster(int _cur_item);
 	void collect_clusters();
-	void collect_connections();//µÃµ½ÏàÓ¦µÄ×ÓÊ÷½Úµã±êºÅ£¬¼°Ïà¹ØÍ³¼ÆÁ¿
+	void collect_connections();//ÂµÃƒÂµÅ“ÃÃ Ã“Å ÂµÃ„Ã—Ã“ÃŠÃ·Å“ÃšÂµÃ£Â±ÃªÂºÃ…Â£Â¬Å’Â°ÃÃ Â¹Ã˜ÃÂ³Å’Ã†ÃÂ¿
 	void check_link_status();
 	void compute_marg_lik(int c);
 	void compute_marg_liks();
 	double compute_log_self_link_lik();
 	void compute_log_probs_sampling();
 	void sample_customer();
-	void change_table(int _new_table);//¸Ä±äconnection_start endË÷ÒıµÄ½ÚµãµÄ²Í×À±êºÅÎª_new_table
-	void update_link();//¸Ä±äcur_item µÄcustomer£¬ºÍtable,²¢change_table£¨new_table_cure£©
-	void delete_table(int _old_table);//ÔÚidx_group_curµ±Ç°²Í¹İÖĞ°ÑÔ­²Í×À±êºÅold_talble eraseµô£¬
-	void change_customer(int _new_customer);//½üËÆ £¬Õâ¸öº¯ÊıÓÃÀ´´¦Àíµ±½ÚµãÏûÊ§Ê±£¬°ÑÔ­ÏÈÖ¸Ïòcur_itemµÄ½Úµã¶¼Ö¸ÏòÁËĞÂµÄ²Í×ÀµÄ±êºÅ½Úµã£¬ÕâÊÇÒ»ÖÖ½üËÆ´¦Àí
+	void change_table(int _new_table);//Å¾Ã„Â±Ã¤connection_start endÃ‹Ã·Ã’Ã½ÂµÃ„Å“ÃšÂµÃ£ÂµÃ„Â²ÃÃ—Ã€Â±ÃªÂºÃ…ÃÂª_new_table
+	void update_link();//Å¾Ã„Â±Ã¤cur_item ÂµÃ„customerÂ£Â¬ÂºÃtable,Â²Â¢change_tableÂ£Å¡new_table_cureÂ£Â©
+	void delete_table(int _old_table);//Ã”Ãšidx_group_curÂµÂ±Ã‡Â°Â²ÃÂ¹ÃÃ–ÃÂ°Ã‘Ã”Â­Â²ÃÃ—Ã€Â±ÃªÂºÃ…old_talble eraseÂµÃ´Â£Â¬
+	void change_customer(int _new_customer);//Å“Ã¼Ã‹Ã† Â£Â¬Ã•Ã¢Å¾Ã¶ÂºÂ¯ÃŠÃ½Ã“ÃƒÃ€Å½Å½Å Ã€Ã­ÂµÂ±Å“ÃšÂµÃ£ÃÃ»ÃŠÂ§ÃŠÂ±Â£Â¬Â°Ã‘Ã”Â­ÃÃˆÃ–Å¾ÃÃ²cur_itemÂµÃ„Å“ÃšÂµÃ£Â¶Å’Ã–Å¾ÃÃ²ÃÃ‹ÃÃ‚ÂµÃ„Â²ÃÃ—Ã€ÂµÃ„Â±ÃªÂºÃ…Å“ÃšÂµÃ£Â£Â¬Ã•Ã¢ÃŠÃ‡Ã’Â»Ã–Ã–Å“Ã¼Ã‹Ã†Å½Å Ã€Ã­
 	void merge_customers();
-	void add_table();//ÀûÓÃuni_tableÏòÁ¿ÖĞlistÅÅÁĞµÄÓĞĞòĞÔ£¬ÔÚ¸Ã²Í¹İidx_group_curµÄÄ³¸ö¹Ì¶¨Î»ÖÃ²åÈëÒ»¸ö²Í×À±êºÅ
-	void sample_new_customer();//ÔÚÉÏ²ãÎª¹Ë¿Í²ÉÑùĞÂµÄÁ¬½Ó
+	void add_table();//Ã€Ã»Ã“Ãƒuni_tableÃÃ²ÃÂ¿Ã–ÃlistÃ…Ã…ÃÃÂµÃ„Ã“ÃÃÃ²ÃÃ”Â£Â¬Ã”ÃšÅ¾ÃƒÂ²ÃÂ¹Ãidx_group_curÂµÃ„Ã„Â³Å¾Ã¶Â¹ÃŒÂ¶Å¡ÃÂ»Ã–ÃƒÂ²Ã¥ÃˆÃ«Ã’Â»Å¾Ã¶Â²ÃÃ—Ã€Â±ÃªÂºÃ…
+	void sample_new_customer();//Ã”ÃšÃ‰ÃÂ²Ã£ÃÂªÂ¹Ã‹Â¿ÃÂ²Ã‰Ã‘Ã¹ÃÃ‚ÂµÃ„ÃÂ¬Å“Ã“
 	void sample_for_single();
 	void get_cands_point(int _cur_point);//1201
 	void check_link_status_point(int _cur_point);//1201
@@ -163,31 +173,32 @@ public:
 	void compute_marg_liks_root();//1201
 	void update_point_link(int _cur_point);
 	void sample_link_points(int _cur_point);
-	void sample_and_traverse(int _cur_point);
+	
+void sample_and_traverse(int _cur_point);
 	void add_table_at_point(int _cur_point);
 	void sample_new_customer_point(int _cur_point);
 	void sample_for_leaf(int _cur_point);//1201
 	void sample_for_root(int _cur_point);//1201
 	void sample_for_point();//1201
 	void run_sampler();
-	//¶¨Òå¹ØÓÚ¶Ôlink²ÉÑùµÄÏà¹Øº¯Êı sample_for_link  :sfl
+	//Â¶Å¡Ã’Ã¥Â¹Ã˜Ã“ÃšÂ¶Ã”linkÂ²Ã‰Ã‘Ã¹ÂµÃ„ÃÃ Â¹Ã˜ÂºÂ¯ÃŠÃ½ sample_for_link  :sfl
 	void get_candidates_sfl();
 	int get_cluster_sfl(int _cur_link);
 	void collect_clusters_sfl();
-	void collect_connections_sfl();//µÃµ½ÏàÓ¦µÄ×ÓÊ÷½Úµã±êºÅ£¬¼°Ïà¹ØÍ³¼ÆÁ¿
+	void collect_connections_sfl();//ÂµÃƒÂµÅ“ÃÃ Ã“Å ÂµÃ„Ã—Ã“ÃŠÃ·Å“ÃšÂµÃ£Â±ÃªÂºÃ…Â£Â¬Å’Â°ÃÃ Â¹Ã˜ÃÂ³Å’Ã†ÃÂ¿
 	void check_link_status_sfl();
 	void compute_marg_lik_sfl(int c);
 	void compute_marg_liks_sfl();
 	double compute_log_self_link_lik_sfl();
 	void compute_log_probs_sampling_sfl();
 	void sample_customer_sfl();
-	void change_table_sfl(int _new_table);//¸Ä±äconnection_start endË÷ÒıµÄ½ÚµãµÄ²Í×À±êºÅÎª_new_table
-	void update_link_sfl();//¸Ä±äcur_item µÄcustomer£¬ºÍtable,²¢change_table£¨new_table_cure£©
-	void delete_table_sfl(int _old_table);//ÔÚidx_group_curµ±Ç°²Í¹İÖĞ°ÑÔ­²Í×À±êºÅold_talble eraseµô£¬
-	void change_customer_sfl(int _new_customer);//½üËÆ £¬Õâ¸öº¯ÊıÓÃÀ´´¦Àíµ±½ÚµãÏûÊ§Ê±£¬°ÑÔ­ÏÈÖ¸Ïòcur_itemµÄ½Úµã¶¼Ö¸ÏòÁËĞÂµÄ²Í×ÀµÄ±êºÅ½Úµã£¬ÕâÊÇÒ»ÖÖ½üËÆ´¦Àí
+	void change_table_sfl(int _new_table);//Å¾Ã„Â±Ã¤connection_start endÃ‹Ã·Ã’Ã½ÂµÃ„Å“ÃšÂµÃ£ÂµÃ„Â²ÃÃ—Ã€Â±ÃªÂºÃ…ÃÂª_new_table
+	void update_link_sfl();//Å¾Ã„Â±Ã¤cur_item ÂµÃ„customerÂ£Â¬ÂºÃtable,Â²Â¢change_tableÂ£Å¡new_table_cureÂ£Â©
+	void delete_table_sfl(int _old_table);//Ã”Ãšidx_group_curÂµÂ±Ã‡Â°Â²ÃÂ¹ÃÃ–ÃÂ°Ã‘Ã”Â­Â²ÃÃ—Ã€Â±ÃªÂºÃ…old_talble eraseÂµÃ´Â£Â¬
+	void change_customer_sfl(int _new_customer);//Å“Ã¼Ã‹Ã† Â£Â¬Ã•Ã¢Å¾Ã¶ÂºÂ¯ÃŠÃ½Ã“ÃƒÃ€Å½Å½Å Ã€Ã­ÂµÂ±Å“ÃšÂµÃ£ÃÃ»ÃŠÂ§ÃŠÂ±Â£Â¬Â°Ã‘Ã”Â­ÃÃˆÃ–Å¾ÃÃ²cur_itemÂµÃ„Å“ÃšÂµÃ£Â¶Å’Ã–Å¾ÃÃ²ÃÃ‹ÃÃ‚ÂµÃ„Â²ÃÃ—Ã€ÂµÃ„Â±ÃªÂºÃ…Å“ÃšÂµÃ£Â£Â¬Ã•Ã¢ÃŠÃ‡Ã’Â»Ã–Ã–Å“Ã¼Ã‹Ã†Å½Å Ã€Ã­
 	void merge_customers_sfl();
-	void add_table_sfl();//ÀûÓÃuni_tableÏòÁ¿ÖĞlistÅÅÁĞµÄÓĞĞòĞÔ£¬ÔÚ¸Ã²Í¹İidx_group_curµÄÄ³¸ö¹Ì¶¨Î»ÖÃ²åÈëÒ»¸ö²Í×À±êºÅ
-	void sample_new_customer_sfl();//ÔÚÉÏ²ãÎª¹Ë¿Í²ÉÑùĞÂµÄÁ¬½Ó
+	void add_table_sfl();//Ã€Ã»Ã“Ãƒuni_tableÃÃ²ÃÂ¿Ã–ÃlistÃ…Ã…ÃÃÂµÃ„Ã“ÃÃÃ²ÃÃ”Â£Â¬Ã”ÃšÅ¾ÃƒÂ²ÃÂ¹Ãidx_group_curÂµÃ„Ã„Â³Å¾Ã¶Â¹ÃŒÂ¶Å¡ÃÂ»Ã–ÃƒÂ²Ã¥ÃˆÃ«Ã’Â»Å¾Ã¶Â²ÃÃ—Ã€Â±ÃªÂºÃ…
+	void sample_new_customer_sfl();//Ã”ÃšÃ‰ÃÂ²Ã£ÃÂªÂ¹Ã‹Â¿ÃÂ²Ã‰Ã‘Ã¹ÃÃ‚ÂµÃ„ÃÂ¬Å“Ã“
 	void sample_for_single_sfl();
 	void run_sampler_sfl();
 	//
@@ -197,7 +208,7 @@ public:
 	static int sample_ss(vector<int>& qq, vector<double>& eta, int w);
 	void sample_source_sink_c(int t, int c);
 	static void sample_source_sink();
-	void update_ss_stats_c(int idx_table);//Í¨¹ıorderµÄÖ¸Òı´ÓÒ¶×Ó½Úµã¿ªÊ¼¶Ôstat½øĞĞ¸üĞÂ
+	void update_ss_stats_c(int idx_table);//ÃÅ¡Â¹Ã½orderÂµÃ„Ã–Å¾Ã’Ã½Å½Ã“Ã’Â¶Ã—Ã“Å“ÃšÂµÃ£Â¿ÂªÃŠÅ’Â¶Ã”statÅ“Ã¸ÃÃÅ¾Ã¼ÃÃ‚
 	void update_ss_stats();
 
 	static void label_instances();
@@ -207,7 +218,7 @@ public:
 };
 
 template<typename D> D Layer<D>::base;
-template<typename D> vector< list<QQ>::iterator > Layer<D>::pos_classqq;//Ö¸Ïòclass¡ª¡ªqqµÄÖ¸Õë
+template<typename D> vector< list<QQ>::iterator > Layer<D>::pos_classqq;//Ã–Å¾ÃÃ²classÂ¡ÂªÂ¡ÂªqqÂµÃ„Ã–Å¾Ã•Ã«
 template<typename D> vector< SS > Layer<D>::trainss;
 template<typename D> vector<int> Layer<D>::labels;
 template<typename D> Layer<D>* Layer<D>::top = NULL;
@@ -220,7 +231,7 @@ template<typename D> vector<bool> Layer<D>::is_computed;
 template<typename D> vector<double> Layer<D>::log_pred_liks;
 template<typename D> vector<double> Layer<D>::pred_liks;
 template<typename D> Layer<D>* Layer<D>::cur_layer;
-//²ÉÑùÁ´½Ó
+//Â²Ã‰Ã‘Ã¹ÃÅ½Å“Ã“
 template<typename D> int Layer<D>::cur_link;
 template<typename D> vector< STAT >::iterator Layer<D>::it_stat_cur_sfl;
 //template<typename D> QQ Layer<D>::qq_temp;
@@ -233,16 +244,16 @@ template<typename D> void Layer<D>::initialize_base()
 	/* add one class and initialize it */
 	int tot_num_words = trainss.size();
 	pos_classqq.assign(tot_num_words, list<QQ>::iterator());
-	pos_classqq.at(0) = base.add_class();//·µ»ØÒ»¸öÖ¸ÏòclassqqÄ©Î²µÄÖ¸Õë
+	pos_classqq.at(0) = base.add_class();//Â·ÂµÂ»Ã˜Ã’Â»Å¾Ã¶Ã–Å¾ÃÃ²classqqÃ„Â©ÃÂ²ÂµÃ„Ã–Å¾Ã•Ã«
 	for (vector<SS>::iterator it_w = trainss.begin(); it_w != trainss.end(); it_w++)
 	{
 		//	base.add_data(base.get_classqq().front(), trainss.at(i));
-		base.add_data(base.get_classqq().front(), *it_w);//¶¨ÒåÔÚMultinomial.cpp »òÕß Tri_Mult.cppÖĞ£¬È¡¾öÓÚbaseµÄÀàĞÍ×÷ÓÃÊÇÔÚ³¤¶ÈÎª1000´ÊµäqqÖĞ¶ÔÓ¦µÄÎ»ÖÃÍ³¼ÆÃ¿¸öµ¥´Ê³öÏÖµÄ´ÎÊı
+		base.add_data(base.get_classqq().front(), *it_w);//Â¶Å¡Ã’Ã¥Ã”ÃšMultinomial.cpp Â»Ã²Ã•ÃŸ Tri_Mult.cppÃ–ÃÂ£Â¬ÃˆÂ¡Å¸Ã¶Ã“ÃšbaseÂµÃ„Ã€Ã ÃÃÃ—Ã·Ã“ÃƒÃŠÃ‡Ã”ÃšÂ³â‚¬Â¶ÃˆÃÂª1000Å½ÃŠÂµÃ¤qqÃ–ÃÂ¶Ã”Ã“Å ÂµÃ„ÃÂ»Ã–ÃƒÃÂ³Å’Ã†ÃƒÂ¿Å¾Ã¶ÂµÂ¥Å½ÃŠÂ³Ã¶ÃÃ–ÂµÃ„Å½ÃÃŠÃ½
 	}
 	is_computed.assign(tot_num_words, false);
 	log_pred_liks.assign(tot_num_words, 0.0);
 	pred_liks.assign(tot_num_words, 0.0);
-	//Îªlink²ÉÑù×ö×¼±¸
+	//ÃÂªlinkÂ²Ã‰Ã‘Ã¹Ã—Ã¶Ã—Å’Â±Å¾
 	is_computed_sfl.assign(tot_num_words, false);
 	log_pred_liks_sfl.assign(tot_num_words, 0.0);
 	pred_liks_sfl.assign(tot_num_words, 0.0);
@@ -261,16 +272,18 @@ template<typename D> double Layer<D>::compute_tot_lik()
 	return tot_lik;
 }
 
+/*
 #ifdef TRI_MULT_DIST
 template<typename D> void Layer<D>::load_matlab_trainss(string& trainss_file)
 {
 	if (trainss_file.empty())
 	{
-		num_groups = 1;//³ıÁËlayer£¨0£©¶¼³õÊ¼»¯Îª1¸öÍÅ´Ø
-		//num_groups = 100;//³ıÁËlayer£¨0£©¶¼³õÊ¼»¯Îª100¸öÍÅ´Ø
+		num_groups = 1;//Â³Ã½ÃÃ‹layerÂ£Å¡0Â£Â©Â¶Å’Â³ÃµÃŠÅ’Â»Â¯ÃÂª1Å¾Ã¶ÃÃ…Å½Ã˜
+		//num_groups = 100;//Â³Ã½ÃÃ‹layerÂ£Å¡0Â£Â©Â¶Å’Â³ÃµÃŠÅ’Â»Â¯ÃÂª100Å¾Ã¶ÃÃ…Å½Ã˜
 		inds_groups.assign(trainss.size(), 0);
 	}
-	else
+	
+else
 	{
 		MATFile *pmat = matOpen(trainss_file.c_str(), "r");
 		mxArray *pmx_trainss = matGetVariable(pmat, "trainss");
@@ -282,7 +295,7 @@ template<typename D> void Layer<D>::load_matlab_trainss(string& trainss_file)
 		const int voc_size_sink = base.get_eta().eta_sink.size() - 1;
 
 
-		/* load data from .mat file */
+		/* load data from .mat file *//*
 		num_groups = mxGetNumberOfElements(pmx_trainss);
 		inds_items.reserve(num_groups);
 		labels.assign(num_groups, 0);
@@ -373,7 +386,7 @@ template<typename D> void Layer<D>::load_matlab_trainss(string& trainss_file)
 		int i, j, num_words_i, cnt = 0;
 
 
-		/* load data from .mat file */
+		/* load data from .mat file *//*
 		num_groups = mxGetNumberOfElements(pmx_trainss);
 		inds_items.reserve(num_groups);
 		labels.assign(num_groups, 0);
@@ -398,7 +411,7 @@ template<typename D> void Layer<D>::load_matlab_trainss(string& trainss_file)
 
 			for (j = 0; j != num_words_i; j++)
 			{
-				trainss.push_back((int)(pd[j] - 1));//ÎªÊ²Ã´Òª¼õÒ»ÄØ£¿Ô­Ê¼ÊÇ77£¬ÏÖÔÚÊÇ76£¬»áÓĞÊ²Ã´ºÃ´¦ÄØ£¿
+				trainss.push_back((int)(pd[j] - 1));//ÃÂªÃŠÂ²ÃƒÅ½Ã’ÂªÅ’ÃµÃ’Â»Ã„Ã˜Â£Â¿Ã”Â­ÃŠÅ’ÃŠÃ‡77Â£Â¬ÃÃ–Ã”ÃšÃŠÃ‡76Â£Â¬Â»Ã¡Ã“ÃÃŠÂ²ÃƒÅ½ÂºÃƒÅ½Å Ã„Ã˜Â£Â¿
 				inds_groups.push_back(i);
 				inds_items_i.push_back(cnt++);
 			}
@@ -406,11 +419,27 @@ template<typename D> void Layer<D>::load_matlab_trainss(string& trainss_file)
 	}
 }
 #endif
+*/
 template<typename D> int Layer<D>::check_txt_number(string& filepath)//20170821
 {
-	int num{ 0 };
-	string filename = filepath + "/doc_*.txt";
-	char * dir = &filename[0];
+	
+
+	DIR *dp;
+	struct dirent *dirp;
+	int n=0;
+	
+	dp=opendir(&filepath[0]);
+	while ((dirp=readdir(dp))!=NULL  )
+	{
+		if(!fnmatch("doc_*.txt",dirp->d_name,FNM_PATHNAME|FNM_PERIOD ) )
+		{
+			n++;
+			printf("%s\n",dirp->d_name);
+		}
+	}
+	printf("n = %d",n);
+	closedir(dp);
+/*	char * dir = &filename[0];
 	_finddata_t fileDir;
 	long lfDir;
 	if ((lfDir = _findfirst(dir, &fileDir)) == -1l)
@@ -424,7 +453,10 @@ template<typename D> int Layer<D>::check_txt_number(string& filepath)//20170821
 		//printf("number of docs : %d \n", num);
 	}
 	_findclose(lfDir);
-	return num;
+*/
+	int ij;
+	cin>>ij;
+	return n;
 
 }
 template<typename D> void Layer<D>::load_txt_trainss(string& trainss_file)//20170821
@@ -445,7 +477,7 @@ template<typename D> void Layer<D>::load_txt_trainss(string& trainss_file)//2017
 		labels.assign(num_groups, 0);
 		int num_words = 0;
 		int word;
-		//ÕâÀïÊ¡ÂÔÁËºÜ¶àreverseµÄ»·½Ú£¬±ÜÃâ·´¸´¶ÁĞ´ÎÄµµ
+		//Ã•Ã¢Ã€Ã¯ÃŠÂ¡Ã‚Ã”ÃÃ‹ÂºÃœÂ¶Ã reverseÂµÃ„Â»Â·Å“ÃšÂ£Â¬Â±ÃœÃƒÃ¢Â·Å½Å¾Å½Â¶ÃÃÅ½ÃÃ„ÂµÂµ
 		//for (i = 0; i != num_groups; i++)
 		//{
 		//	pmx_doc_i = mxGetCell(pmx_trainss, i);
@@ -465,23 +497,24 @@ template<typename D> void Layer<D>::load_txt_trainss(string& trainss_file)//2017
 			s1 << i+1;
 			string s2 = s1.str();
 
-			string txtname = trainss_file + "doc_" + s2 + ".txt";
+			string txtname = trainss_file + "/doc_" + s2 + ".txt";
 			//cout << txtname << endl;
 			char * dir = &txtname[0];
 			FILE *fileptr;
 			fileptr = fopen(dir, "r");
-			while (fscanf(fileptr, "%d", &word) != EOF)//Õâ¸ö¶ÔÓÚ×ÔÖÆÎÄµµ¿ÉÒÔÔ¤ÏÈÖªµÀÊıÁ¿
+			while (fscanf(fileptr, "%d", &word) != EOF)//Ã•Ã¢Å¾Ã¶Â¶Ã”Ã“ÃšÃ—Ã”Ã–Ã†ÃÃ„ÂµÂµÂ¿Ã‰Ã’Ã”Ã”â‚¬ÃÃˆÃ–ÂªÂµÃ€ÃŠÃ½ÃÂ¿
 			{
-				trainss.push_back(word-1);//word ÊÇ´Ó1µ½25£¬ºóÃæÍ³¼Æ´ÊÆµµÄÊ±ºòÒª´Ó0Í³¼Æ
+				trainss.push_back(word-1);//word ÃŠÃ‡Å½Ã“1ÂµÅ“25Â£Â¬ÂºÃ³ÃƒÃ¦ÃÂ³Å’Ã†Å½ÃŠÃ†ÂµÂµÃ„ÃŠÂ±ÂºÃ²Ã’ÂªÅ½Ã“0ÃÂ³Å’Ã†
 				inds_groups.push_back(i);
 				inds_items_i.push_back(num_words++);
-				//printf("num_words £º%d", word - 1);
+				//printf("num_words Â£Âº%d", word - 1);
 			}
 			fclose(fileptr);
 		}
 		//cin >> j;
 	}
 }
+/*
 template<typename D> void Layer<D>::load_matlab_link(string& link_file, double _alpha_group)
 {
 	int i, j;
@@ -489,7 +522,7 @@ template<typename D> void Layer<D>::load_matlab_link(string& link_file, double _
 	log_alpha_group = log(_alpha_group);
 	if (link_file.empty())
 	{
-		/* create document links and prior for ordinary lda */
+		/* create document links and prior for ordinary lda *//*
 		vector<int> group_candidates_i;
 		vector<double> group_priors_i;
 		vector<double> log_group_priors_i;
@@ -523,7 +556,7 @@ template<typename D> void Layer<D>::load_matlab_link(string& link_file, double _
 		int num_cands_i, cnt = 0;
 
 
-		/* load data from .mat file */
+		/* load data from .mat file *//*
 
 		for (i = 0; i != num_groups; i++)
 		{
@@ -543,18 +576,19 @@ template<typename D> void Layer<D>::load_matlab_link(string& link_file, double _
 
 			for (j = 0; j != num_cands_i - 1; j++)
 			{
-				group_candidates_i.push_back((int)(pd_cands_i[j]) - 1);//¶ÔËùÓĞ±êºÅ¶¼¼õÁËÒ»¸ö
+				group_candidates_i.push_back((int)(pd_cands_i[j]) - 1);//Â¶Ã”Ã‹Ã¹Ã“ÃÂ±ÃªÂºÃ…Â¶Å’Å’ÃµÃÃ‹Ã’Â»Å¾Ã¶
 				log_group_priors_i.push_back(pd_log_priors_i[j]);
 				group_priors_i.push_back(exp(pd_log_priors_i[j]));
 			}
 
-			group_candidates_i.push_back(i);//ÉèÖÃ×ÔÁ¬½ÓµÄÖµÊÇalpha 1
+			group_candidates_i.push_back(i);//Ã‰Ã¨Ã–ÃƒÃ—Ã”ÃÂ¬Å“Ã“ÂµÃ„Ã–ÂµÃŠÃ‡alpha 1
 			log_group_priors_i.push_back(log_alpha_group);
 			group_priors_i.push_back(alpha_group);
 		}
 		matClose(pmat);
 	}
 }
+*/
 template<typename D> void Layer<D>::load_txt_link(string& link_file, double _alpha_group)//20170821
 {
 	int i, j;
@@ -591,7 +625,7 @@ template<typename D> void Layer<D>::load_txt_link(string& link_file, double _alp
 		int  cnt = 0;
 		for (i = 0; i != num_groups; i++)
 		{
-			//¶ÔÓÚÃ¿ÆªÎÄµµ
+			//Â¶Ã”Ã“ÃšÃƒÂ¿Ã†ÂªÃÃ„ÂµÂµ
 			int num_cands_i, word;
 			double logprior;
 			group_candidates.push_back(vector<int>());
@@ -605,8 +639,8 @@ template<typename D> void Layer<D>::load_txt_link(string& link_file, double _alp
 			s1 << i + 1;
 			string s2 = s1.str();
 
-			string linkname = link_file + "cand_link" + s2 + ".txt";
-			string logpriorname = link_file + "log_prior" + s2 + ".txt";
+			string linkname = link_file + "/cand_link" + s2 + ".txt";
+			string logpriorname = link_file + "/log_prior" + s2 + ".txt";
 			//cout << linkname << endl;
 			char * dirlink = &linkname[0];
 			char * dirlogprior = &logpriorname[0];
@@ -622,23 +656,23 @@ template<typename D> void Layer<D>::load_txt_link(string& link_file, double _alp
 			for (j = 0; j != num_cands_i - 1; j++)
 			{
 				fscanf(fileptr1, "%d", &word);// != EOF;
-				group_candidates_i.push_back(word - 1);//¶ÔËùÓĞ±êºÅ¶¼¼õÁËÒ»¸ö
+				group_candidates_i.push_back(word - 1);//Â¶Ã”Ã‹Ã¹Ã“ÃÂ±ÃªÂºÃ…Â¶Å’Å’ÃµÃÃ‹Ã’Â»Å¾Ã¶
 				fscanf(fileptr2, "%d", &logprior);
 				log_group_priors_i.push_back(logprior);
 				group_priors_i.push_back(exp(logprior));
 				//cout << word  << ";";
 			}
-			//while (fscanf(fileptr, "%d", &word) != EOF)//Õâ¸ö¶ÔÓÚ×ÔÖÆÎÄµµ¿ÉÒÔÔ¤ÏÈÖªµÀÊıÁ¿
+			//while (fscanf(fileptr, "%d", &word) != EOF)//Ã•Ã¢Å¾Ã¶Â¶Ã”Ã“ÃšÃ—Ã”Ã–Ã†ÃÃ„ÂµÂµÂ¿Ã‰Ã’Ã”Ã”â‚¬ÃÃˆÃ–ÂªÂµÃ€ÃŠÃ½ÃÂ¿
 			//{
-			//	trainss.push_back(word - 1);//word ÊÇ´Ó1µ½25£¬ºóÃæÍ³¼Æ´ÊÆµµÄÊ±ºòÒª´Ó0Í³¼Æ
+			//	trainss.push_back(word - 1);//word ÃŠÃ‡Å½Ã“1ÂµÅ“25Â£Â¬ÂºÃ³ÃƒÃ¦ÃÂ³Å’Ã†Å½ÃŠÃ†ÂµÂµÃ„ÃŠÂ±ÂºÃ²Ã’ÂªÅ½Ã“0ÃÂ³Å’Ã†
 			//	inds_groups.push_back(i);
 			//	inds_items_i.push_back(num_words++);
-			//	//printf("num_words £º%d", word - 1);
+			//	//printf("num_words Â£Âº%d", word - 1);
 			//}
 			fclose(fileptr1);
 			fclose(fileptr2);
 			
-			group_candidates_i.push_back(i);//ÉèÖÃ×ÔÁ¬½ÓµÄÖµÊÇalpha 1
+			group_candidates_i.push_back(i);//Ã‰Ã¨Ã–ÃƒÃ—Ã”ÃÂ¬Å“Ã“ÂµÃ„Ã–ÂµÃŠÃ‡alpha 1
 			log_group_priors_i.push_back(log_alpha_group);
 			group_priors_i.push_back(alpha_group);
 			///cout << endl;
@@ -649,15 +683,16 @@ template<typename D> void Layer<D>::load_txt_link(string& link_file, double _alp
 }
 
 template<typename D> void Layer<D>::initialize_link(int num_groups, int num_init_cls)
-{//³õÊ¼»¯ÍÅ´Ø
+{//Â³ÃµÃŠÅ’Â»Â¯ÃÃ…Å½Ã˜
 	int i;
 	int tot_num_words = trainss.size();
-	customers.assign(tot_num_words, 0);//Ã¿Ò»²ãµÄcustomer£¬table
+cout<<"tot_num_words "<<tot_num_words<<endl;
+	customers.assign(tot_num_words, 0);//ÃƒÂ¿Ã’Â»Â²Ã£ÂµÃ„customerÂ£Â¬table
 	tables.assign(tot_num_words, 0);
 	if (num_groups == 1)
 	{
-		inds_groups.assign(tot_num_words, 0);//Ã¿¸ö¹ì¼£µ¥´ÊËùÊôµÄ²Í¹İ
-		inds_items.push_back(vector<int>());//word ÔÚÊı¾İ¼¯ÖĞµÄÅÅĞò
+		inds_groups.assign(tot_num_words, 0);//ÃƒÂ¿Å¾Ã¶Â¹Ã¬Å’Â£ÂµÂ¥Å½ÃŠÃ‹Ã¹ÃŠÃ´ÂµÃ„Â²ÃÂ¹Ã
+		inds_items.push_back(vector<int>());//word Ã”ÃšÃŠÃ½Å¸ÃÅ’Â¯Ã–ÃÂµÃ„Ã…Ã…ÃÃ²
 		if (child)
 		{
 			collect_customers();
@@ -674,10 +709,10 @@ template<typename D> void Layer<D>::initialize_link(int num_groups, int num_init
 
 	uni_tables.assign(num_groups, list<int>());
 	pos_uni_tables.assign(tot_num_words, list<int>::iterator());
-	//ÒÔÏÂÁ½¶ÎÓĞÊ²Ã´±¾ÖÊÇø±ğ£¬ÎªÉ¶ÖĞ¼ä²ãÒªÓÃµÄºÍlayer0£¬backÒªÓÃµÄÓĞÇø±ğ
+	//Ã’Ã”ÃÃ‚ÃÅ“Â¶ÃÃ“ÃÃŠÂ²ÃƒÅ½Â±Å¸Ã–ÃŠÃ‡Ã¸Â±Ã°Â£Â¬ÃÂªÃ‰Â¶Ã–ÃÅ’Ã¤Â²Ã£Ã’ÂªÃ“ÃƒÂµÃ„ÂºÃlayer0Â£Â¬backÃ’ÂªÃ“ÃƒÂµÃ„Ã“ÃÃ‡Ã¸Â±Ã°
 	if (num_init_cls == tot_num_words)
 	{
-		//Ã¿¸ö½Úµã×Ô³ÉÒ»×À
+		//ÃƒÂ¿Å¾Ã¶Å“ÃšÂµÃ£Ã—Ã”Â³Ã‰Ã’Â»Ã—Ã€
 		for (i = 0; i != inds_items.size(); i++)
 		{
 			list<int> &uni_tables_i = uni_tables.at(i);
@@ -687,16 +722,17 @@ template<typename D> void Layer<D>::initialize_link(int num_groups, int num_init
 			for (it_i = inds_items_i.begin(); it_i != inds_items_i.end(); it_i++)
 			{
 				idx_j = *it_i;
-				customers.at(idx_j) = idx_j;//Ã¿¸ö¹Ë¿ÍµÄÁ´½ÓÖ¸Ïò×Ô¼º£¬¼´Ã¿¸ö¹Ë¿Í×Ô³ÉÒ»×À
-				tables.at(idx_j) = idx_j;//dµ«²Í×ÀºÍ¹Ë¿ÍÈÔÈ»ÊÇ¶ÔÓ¦¹ØÏµ
-				uni_tables_i.push_back(idx_j);//Ã¿¸ö²Í¹İÄÚµÄ²Í×À±êºÅ
+				customers.at(idx_j) = idx_j;//ÃƒÂ¿Å¾Ã¶Â¹Ã‹Â¿ÃÂµÃ„ÃÅ½Å“Ã“Ã–Å¾ÃÃ²Ã—Ã”Å’ÂºÂ£Â¬Å’Å½ÃƒÂ¿Å¾Ã¶Â¹Ã‹Â¿ÃÃ—Ã”Â³Ã‰Ã’Â»Ã—Ã€
+				tables.at(idx_j) = idx_j;//dÂµÂ«Â²ÃÃ—Ã€ÂºÃÂ¹Ã‹Â¿ÃÃˆÃ”ÃˆÂ»ÃŠÃ‡Â¶Ã”Ã“Å Â¹Ã˜ÃÂµ
+				uni_tables_i.push_back(idx_j);//ÃƒÂ¿Å¾Ã¶Â²ÃÂ¹ÃÃ„ÃšÂµÃ„Â²ÃÃ—Ã€Â±ÃªÂºÃ…
 				pos_uni_tables.at(idx_j) = --uni_tables_i.end();
 			}
 		}
 	}
 	else
 	{
-		//Ã¿¸ö²Í¹İÖĞµÄ¹Ë¿ÍÈ«²¿³õÊ¼»¯µ½Ò»×ÀÉÏ
+
+		//ÃƒÂ¿Å¾Ã¶Â²ÃÂ¹ÃÃ–ÃÂµÃ„Â¹Ã‹Â¿ÃÃˆÂ«Â²Â¿Â³ÃµÃŠÅ’Â»Â¯ÂµÅ“Ã’Â»Ã—Ã€Ã‰Ã
 		for (i = 0; i != inds_items.size(); i++)
 		{
 
@@ -705,19 +741,19 @@ template<typename D> void Layer<D>::initialize_link(int num_groups, int num_init
 			vector<int>::iterator it_i;
 			int idx_j, idx_0 = inds_items_i.front();
 			for (it_i = inds_items_i.begin(); it_i != inds_items_i.end(); it_i++)
-			{//ÎªÃ¿Ò»¸öµ¥´Ê×ö±êÇ©
+			{//ÃÂªÃƒÂ¿Ã’Â»Å¾Ã¶ÂµÂ¥Å½ÃŠÃ—Ã¶Â±ÃªÃ‡Â©
 				idx_j = *it_i;
-				customers.at(idx_j) = idx_0;//Ã¿¸ö²Í¹İÖĞµÄ¹Ë¿Í³õÊ¼»¯Îª1×À
-				tables.at(idx_j) = idx_0;//Õâ²Í×ÀµÄ±êºÅ¾ÍÊÇµÚÒ»¸ö½øÈë¸Ã²Í¹İµÄ¹Ë¿Í
+				customers.at(idx_j) = idx_0;//ÃƒÂ¿Å¾Ã¶Â²ÃÂ¹ÃÃ–ÃÂµÃ„Â¹Ã‹Â¿ÃÂ³ÃµÃŠÅ’Â»Â¯ÃÂª1Ã—Ã€
+				tables.at(idx_j) = idx_0;//Ã•Ã¢Â²ÃÃ—Ã€ÂµÃ„Â±ÃªÂºÃ…Å¸ÃÃŠÃ‡ÂµÃšÃ’Â»Å¾Ã¶Å“Ã¸ÃˆÃ«Å¾ÃƒÂ²ÃÂ¹ÃÂµÃ„Â¹Ã‹Â¿Ã
 			}
-			uni_tables_i.push_back(idx_0);//°Ñ¸Ã²Í¹İÖĞµÄËùÓĞ²Í×ÀÍÆµ½Ò»¸ölistÖĞÈ¥£¨³õÊ¼»¯ÖĞÃ¿¸ö²Í¹İÖ»ÓĞÒ»¸ö²Í×À£©
-			pos_uni_tables.at(idx_0) = --uni_tables_i.end();//ËûÊÇuni_tables µÄµü´úÆ÷
+			uni_tables_i.push_back(idx_0);//Â°Ã‘Å¾ÃƒÂ²ÃÂ¹ÃÃ–ÃÂµÃ„Ã‹Ã¹Ã“ÃÂ²ÃÃ—Ã€ÃÃ†ÂµÅ“Ã’Â»Å¾Ã¶listÃ–ÃÃˆÂ¥Â£Å¡Â³ÃµÃŠÅ’Â»Â¯Ã–ÃÃƒÂ¿Å¾Ã¶Â²ÃÂ¹ÃÃ–Â»Ã“ÃÃ’Â»Å¾Ã¶Â²ÃÃ—Ã€Â£Â©
+			pos_uni_tables.at(idx_0) = --uni_tables_i.end();//Ã‹Ã»ÃŠÃ‡uni_tables ÂµÃ„ÂµÃ¼Å½ÃºÃ†Ã·
 		}
 	}
 }
 
 template<typename D> void Layer<D>::collect_customers()
-{//´Ó child-> uni_table ÖĞÍ³¼Æ±¾²ãÖĞÃ¿¸ö²Í¹İµÄ¹Ë¿Í±êºÅ£¨Ò²¾ÍÊÇchildÖĞµÄ²Í×À±êºÅ£©
+{//Å½Ã“ child-> uni_table Ã–ÃÃÂ³Å’Ã†Â±Å¸Â²Ã£Ã–ÃÃƒÂ¿Å¾Ã¶Â²ÃÂ¹ÃÂµÃ„Â¹Ã‹Â¿ÃÂ±ÃªÂºÃ…Â£Å¡Ã’Â²Å¸ÃÃŠÃ‡childÃ–ÃÂµÃ„Â²ÃÃ—Ã€Â±ÃªÂºÃ…Â£Â©
 #ifdef PRINT_FUNC_NAME
 	cout << "collect_customers()" << endl;
 #endif
@@ -737,11 +773,11 @@ template<typename D> void Layer<D>::collect_customers()
 		{
 			for (it_tab_j = it_tab_i->begin(); it_tab_j != it_tab_i->end(); it_tab_j++)
 			{
-				int idx_table = *it_tab_j;//childlayerÖĞ²Í×ÀµÄ±êºÅ
+				int idx_table = *it_tab_j;//childlayerÃ–ÃÂ²ÃÃ—Ã€ÂµÃ„Â±ÃªÂºÃ…
 				//cout << "idx_table " << idx_table << endl;
-				int idx_group = inds_groups.at(idx_table);//±¾²ãÖĞÔÚÄÇ¸ö²Í×ÀÉÏµÄgroup±êºÅ
+				int idx_group = inds_groups.at(idx_table);//Â±Å¸Â²Ã£Ã–ÃÃ”ÃšÃ„Ã‡Å¾Ã¶Â²ÃÃ—Ã€Ã‰ÃÂµÃ„groupÂ±ÃªÂºÃ…
 				//cout << "idx_group " << idx_group << endl;
-				inds_items.at(idx_group).push_back(idx_table);//±¾²ãµÄinds_items °Ñ²Í×À±êºÅ×÷Îªµ¥´Ê·ÅÔÚ¶ÔÓ¦µÄgroupÖĞ£¬Õâ¸ögroup¿ÉÄÜ´ú±í²Í¹İĞÅÏ¢
+				inds_items.at(idx_group).push_back(idx_table);//Â±Å¸Â²Ã£ÂµÃ„inds_items Â°Ã‘Â²ÃÃ—Ã€Â±ÃªÂºÃ…Ã—Ã·ÃÂªÂµÂ¥Å½ÃŠÂ·Ã…Ã”ÃšÂ¶Ã”Ã“Å ÂµÃ„groupÃ–ÃÂ£Â¬Ã•Ã¢Å¾Ã¶groupÂ¿Ã‰Ã„ÃœÅ½ÃºÂ±Ã­Â²ÃÂ¹ÃÃÃ…ÃÂ¢
 			}
 		}
 	}
@@ -754,39 +790,39 @@ template<typename D> void Layer<D>::get_candidates()
 #endif
 	if (child == NULL)
 	{//layer(0)
-		int i = inds_groups.at(cur_item);//ÕÒµ½Õâ¸öword¶ÔÓ¦µÄgroup
-		vector<int> &inds_items_cur = inds_items.at(i);//ÕÒµ½Õâ¸ögroup µ±Ç°ËùÓĞwordµÄË÷ÒıÖµ
-		int j = cur_item - inds_items_cur.front();//µ±Ç°µÄword¾àÀëÕâÒ»×é±êÇ©Î»ÖÃµÄ¶àÔ¶
-		if (item_candidates.empty())//ÓÃitem_candidates ×öÅĞ¶Ï£¬È·Ã»ÓĞ¶ÔËü½øĞĞ¸³Öµ²Ù×÷£¿
-		{//Èç¹ûitem_candidatesÊÇ¿ÕµÄ£¬¾Í¶Ôitem_cands_cur¸³inds_items_curÖĞµÄÖµ£¬Ò²¾ÍÊÇÕâÕâÒ»×éÖĞÄÇĞ©word µÄË÷Òı
+		int i = inds_groups.at(cur_item);//Ã•Ã’ÂµÅ“Ã•Ã¢Å¾Ã¶wordÂ¶Ã”Ã“Å ÂµÃ„group
+		vector<int> &inds_items_cur = inds_items.at(i);//Ã•Ã’ÂµÅ“Ã•Ã¢Å¾Ã¶group ÂµÂ±Ã‡Â°Ã‹Ã¹Ã“ÃwordÂµÃ„Ã‹Ã·Ã’Ã½Ã–Âµ
+		int j = cur_item - inds_items_cur.front();//ÂµÂ±Ã‡Â°ÂµÃ„wordÅ¸Ã Ã€Ã«Ã•Ã¢Ã’Â»Ã—Ã©Â±ÃªÃ‡Â©ÃÂ»Ã–ÃƒÂµÃ„Â¶Ã Ã”Â¶
+		if (item_candidates.empty())//Ã“Ãƒitem_candidates Ã—Ã¶Ã…ÃÂ¶ÃÂ£Â¬ÃˆÂ·ÃƒÂ»Ã“ÃÂ¶Ã”Ã‹Ã¼Å“Ã¸ÃÃÅ¾Â³Ã–ÂµÂ²Ã™Ã—Ã·Â£Â¿
+		{//ÃˆÃ§Â¹Ã»item_candidatesÃŠÃ‡Â¿Ã•ÂµÃ„Â£Â¬Å¸ÃÂ¶Ã”item_cands_curÅ¾Â³inds_items_curÃ–ÃÂµÃ„Ã–ÂµÂ£Â¬Ã’Â²Å¸ÃÃŠÃ‡Ã•Ã¢Ã•Ã¢Ã’Â»Ã—Ã©Ã–ÃÃ„Ã‡ÃÂ©word ÂµÃ„Ã‹Ã·Ã’Ã½
 			vector<int>::iterator start = inds_items_cur.begin();
 			vector<int>::iterator end = inds_items_cur.begin() + j + 1;
 			item_cands_cur.assign(start, end);//item_priors_cur.assign(item_cands_cur.size(), 1.0);
 			log_item_priors_cur.assign(item_cands_cur.size(), 0.0);//log(1)=0;//item_priors_cur.back() = alpha_item;
-			log_item_priors_cur.back() = log_alpha_item;//ÕâÁ½¸ö¶«Î÷µÄÎ¬¶È¿ÉÄÜ²»Ò»ÖÂ
+			log_item_priors_cur.back() = log_alpha_item;//Ã•Ã¢ÃÅ“Å¾Ã¶Â¶Â«ÃÃ·ÂµÃ„ÃÂ¬Â¶ÃˆÂ¿Ã‰Ã„ÃœÂ²Â»Ã’Â»Ã–Ã‚
 		}
 		else
-		{//Èç¹ûÓĞÖµ£¬Ê¹ÓÃitem_candidateÖĞµÄÖµ¶Ôµ±Ç°µÄitem_cands½øĞĞ¸³Öµ
+		{//ÃˆÃ§Â¹Ã»Ã“ÃÃ–ÂµÂ£Â¬ÃŠÂ¹Ã“Ãƒitem_candidateÃ–ÃÂµÃ„Ã–ÂµÂ¶Ã”ÂµÂ±Ã‡Â°ÂµÃ„item_candsÅ“Ã¸ÃÃÅ¾Â³Ã–Âµ
 			item_cands_cur = item_candidates.at(i).at(j);//item_priors_cur = item_priors.at(i).at(j);
 			log_item_priors_cur = log_item_priors.at(i).at(j);
 		}
 	}
 	else
-	{//layer£¨1£©£¬layer£¨2£©
+	{//layerÂ£Å¡1Â£Â©Â£Â¬layerÂ£Å¡2Â£Â©
 		item_cands_cur.clear();
 		item_priors_cur.clear();
 		log_item_priors_cur.clear();
-		int idx_table_child = cur_item;//µ±Ç°word
-		int idx_group_child = child->inds_groups.at(idx_table_child);//¶ÔÓ¦µÄchildÖĞµÄgroupË÷Òı
-		vector<int> &group_candidates_i = child->group_candidates.at(idx_group_child);//¶¼ÒÀÀµÓÚchild µÄgroup candidate
+		int idx_table_child = cur_item;//ÂµÂ±Ã‡Â°word
+		int idx_group_child = child->inds_groups.at(idx_table_child);//Â¶Ã”Ã“Å ÂµÃ„childÃ–ÃÂµÃ„groupÃ‹Ã·Ã’Ã½
+		vector<int> &group_candidates_i = child->group_candidates.at(idx_group_child);//Â¶Å’Ã’Ã€Ã€ÂµÃ“Ãšchild ÂµÃ„group candidate
 		vector<double> &group_priors_i = child->group_priors.at(idx_group_child);
 		vector<double> &log_group_priors_i = child->log_group_priors.at(idx_group_child);
 		vector<int>::iterator it_c = group_candidates_i.begin();
 		vector<double>::iterator it_p = group_priors_i.begin();
 		vector<double>::iterator it_log_p = log_group_priors_i.begin();
-		for (; it_c != group_candidates_i.end() - 1; it_c++, it_p++, it_log_p++)//ºÍËùÔÚµÄ²Í¹İÓĞÁ´½ÓµÄ²Í¹İ
+		for (; it_c != group_candidates_i.end() - 1; it_c++, it_p++, it_log_p++)//ÂºÃÃ‹Ã¹Ã”ÃšÂµÃ„Â²ÃÂ¹ÃÃ“ÃÃÅ½Å“Ã“ÂµÃ„Â²ÃÂ¹Ã
 		{
-			list<int> &uni_tables_i = child->uni_tables.at(*it_c);//child layerÖĞ Óë¸Ã²Í¹İÁ´½ÓµÄ²Í¹İÖĞµÄËùÓĞ²Í×À
+			list<int> &uni_tables_i = child->uni_tables.at(*it_c);//child layerÃ–Ã Ã“Ã«Å¾ÃƒÂ²ÃÂ¹ÃÃÅ½Å“Ã“ÂµÃ„Â²ÃÂ¹ÃÃ–ÃÂµÃ„Ã‹Ã¹Ã“ÃÂ²ÃÃ—Ã€
 			list<int>::iterator it_t = uni_tables_i.begin();
 			for (; it_t != uni_tables_i.end(); it_t++)
 			{
@@ -795,7 +831,7 @@ template<typename D> void Layer<D>::get_candidates()
 			item_priors_cur.insert(item_priors_cur.end(), uni_tables_i.size(), *it_p);
 			log_item_priors_cur.insert(log_item_priors_cur.end(), uni_tables_i.size(), *it_log_p);
 		}
-		list<int> &uni_tables_i = child->uni_tables.at(idx_group_child);//ËùÓĞÔÚËüÇ°ÃæµÄ×é¶¼ÄÉÈëºòÑ¡
+		list<int> &uni_tables_i = child->uni_tables.at(idx_group_child);//Ã‹Ã¹Ã“ÃÃ”ÃšÃ‹Ã¼Ã‡Â°ÃƒÃ¦ÂµÃ„Ã—Ã©Â¶Å’Ã„Ã‰ÃˆÃ«ÂºÃ²Ã‘Â¡
 		list<int>::iterator it_t = uni_tables_i.begin();
 		while (it_t != uni_tables_i.end() && cur_item > *it_t)
 		{//cout << "uni_tables_i for item_cands_cur" << *it_t << endl;
@@ -804,7 +840,7 @@ template<typename D> void Layer<D>::get_candidates()
 			log_item_priors_cur.push_back(0.0);
 			it_t++;
 		}
-		item_cands_cur.push_back(idx_table_child);//¸ø×Ô¼ºÁôµÄÒ»¸öÎ»ÖÃºÍÏàÓ¦µÄ¸ÅÂÊÖµ£¬
+		item_cands_cur.push_back(idx_table_child);//Å¾Ã¸Ã—Ã”Å’ÂºÃÃ´ÂµÃ„Ã’Â»Å¾Ã¶ÃÂ»Ã–ÃƒÂºÃÃÃ Ã“Å ÂµÃ„Å¾Ã…Ã‚ÃŠÃ–ÂµÂ£Â¬
 		item_priors_cur.push_back(alpha_item);
 		log_item_priors_cur.push_back(log_alpha_item);
 	}
@@ -834,9 +870,9 @@ template<typename D> void Layer<D>::collect_clusters()
 	vector<bool> flag(trainss.size(), false);
 	for (it = item_cands_cur.begin(); it != end; it++)
 	{
-		cluster_i = get_cluster(*it);//µÃµ½×î¶¥²ãµÄ²Í×ÀºÅ
+		cluster_i = get_cluster(*it);//ÂµÃƒÂµÅ“Ã—Ã®Â¶Â¥Â²Ã£ÂµÃ„Â²ÃÃ—Ã€ÂºÃ…
 		cls_cands_cur.push_back(cluster_i);
-		if (!flag.at(cluster_i))//±£Ö¤´æÔÚuni_cls_cands_cur ÖĞµÄ±êºÅÊÇÃ»ÓĞÖØ¸´µÄ
+		if (!flag.at(cluster_i))//Â±Â£Ã–â‚¬Å½Ã¦Ã”Ãšuni_cls_cands_cur Ã–ÃÂµÃ„Â±ÃªÂºÃ…ÃŠÃ‡ÃƒÂ»Ã“ÃÃ–Ã˜Å¾Å½ÂµÃ„
 		{
 			uni_cls_cands_cur.push_back(cluster_i);
 			flag.at(cluster_i) = true;
@@ -893,8 +929,8 @@ template<typename D> inline void Layer<D>::compute_marg_lik(int c)
 {
 	if (!is_computed.at(c))
 	{
-		double temp = base.marg_likelihood(*pos_classqq.at(c), *it_stat_cur);//ÕâÀïËÆºõÒ²Ó¦¸Ã¸ù¾İÊÇ·ñÎª¸ù½ÚµãÊ¹ÓÃit_stat_cur »òÕßÊÇ cur_stat
-		//double temp = base.marg_likelihood(*pos_classqq.at(c), *cur_stat);//1201ÕâÀïËÆºõÒ²Ó¦¸Ã¸ù¾İÊÇ·ñÎª¸ù½ÚµãÊ¹ÓÃit_stat_cur »òÕßÊÇ cur_stat
+		double temp = base.marg_likelihood(*pos_classqq.at(c), *it_stat_cur);//Ã•Ã¢Ã€Ã¯Ã‹Ã†ÂºÃµÃ’Â²Ã“Å Å¾ÃƒÅ¾Ã¹Å¸ÃÃŠÃ‡Â·Ã±ÃÂªÅ¾Ã¹Å“ÃšÂµÃ£ÃŠÂ¹Ã“Ãƒit_stat_cur Â»Ã²Ã•ÃŸÃŠÃ‡ cur_stat
+		//double temp = base.marg_likelihood(*pos_classqq.at(c), *cur_stat);//1201Ã•Ã¢Ã€Ã¯Ã‹Ã†ÂºÃµÃ’Â²Ã“Å Å¾ÃƒÅ¾Ã¹Å¸ÃÃŠÃ‡Â·Ã±ÃÂªÅ¾Ã¹Å“ÃšÂµÃ£ÃŠÂ¹Ã“Ãƒit_stat_cur Â»Ã²Ã•ÃŸÃŠÃ‡ cur_stat
 		log_pred_liks.at(c) = temp;	
 		pred_liks.at(c) = exp(log_pred_liks.at(c));
 		is_computed.at(c) = true;
@@ -926,16 +962,16 @@ template<typename D> double Layer<D>::compute_log_self_link_lik()
 	cout << "compute_log_self_link_lik()" << endl;
 #endif
 	get_candidates();
-	collect_clusters();//uni_cls_cands_cur,´æ´¢ÁËÕâĞ©ºòÑ¡Á´½ÓµÄ¶¥²ãÍÅ´Ø±êºÅ
+	collect_clusters();//uni_cls_cands_cur,Å½Ã¦Å½Â¢ÃÃ‹Ã•Ã¢ÃÂ©ÂºÃ²Ã‘Â¡ÃÅ½Å“Ã“ÂµÃ„Â¶Â¥Â²Ã£ÃÃ…Å½Ã˜Â±ÃªÂºÃ…
 	compute_marg_liks();
 
 	if (parent)
 	{
-		log_self_link_lik = parent->compute_log_self_link_lik();//ÊÇÒ»¸öµİ¹é£¬Ö±µ½Ëã³ölog_self_link_likµÄÖµ£¬²¢¸üĞÂqq_temp
+		log_self_link_lik = parent->compute_log_self_link_lik();//ÃŠÃ‡Ã’Â»Å¾Ã¶ÂµÃÂ¹Ã©Â£Â¬Ã–Â±ÂµÅ“Ã‹Ã£Â³Ã¶log_self_link_likÂµÃ„Ã–ÂµÂ£Â¬Â²Â¢Å¾Ã¼ÃÃ‚qq_temp
 	}
 	else
 	{
-		base.reset_class(qq_temp);//ÖØÖÃÎªÁã
+		base.reset_class(qq_temp);//Ã–Ã˜Ã–ÃƒÃÂªÃÃ£
 		log_self_link_lik = base.marg_likelihood(qq_temp, *it_stat_cur);
 		//log_self_link_lik = base.marg_likelihood(qq_temp, *cur_stat);//1201
 	}
@@ -978,9 +1014,9 @@ template<typename D> void Layer<D>::compute_log_probs_sampling()
 	log_probs_sampling.clear();
 	max_log_prob = -DBL_MAX;
 	vector<int>::iterator it_c = cls_cands_cur.begin();
-	vector<double>::iterator it_log_p = log_item_priors_cur.begin();//ÔÚÑ°ÕÒºòÑ¡µÄÊ±ºò¾ÍÒÑ¾­ËãºÃÁË
+	vector<double>::iterator it_log_p = log_item_priors_cur.begin();//Ã”ÃšÃ‘Â°Ã•Ã’ÂºÃ²Ã‘Â¡ÂµÃ„ÃŠÂ±ÂºÃ²Å¸ÃÃ’Ã‘Å¸Â­Ã‹Ã£ÂºÃƒÃÃ‹
 	double log_prob_i;
-	for (; it_c != cls_cands_cur.end(); it_c++, it_log_p++)//ÕâÀïÓÃµ½µÄ²»ÊÇuni_cls_cands_cur 
+	for (; it_c != cls_cands_cur.end(); it_c++, it_log_p++)//Ã•Ã¢Ã€Ã¯Ã“ÃƒÂµÅ“ÂµÃ„Â²Â»ÃŠÃ‡uni_cls_cands_cur 
 	{
 		log_prob_i = (*it_log_p) + log_pred_liks.at(*it_c);
 		log_probs_sampling.push_back(log_prob_i);
@@ -1011,7 +1047,7 @@ template<typename D> void Layer<D>::sample_customer()
 	}
 	log_probs_sampling.push_back(sum);
 
-	int idx_ci = rand_mult_1(log_probs_sampling);//²úÉúÒ»¸öËæ»úµÄÎ»ÖÃ
+	int idx_ci = rand_mult_1(log_probs_sampling);//Â²ÃºÃ‰ÃºÃ’Â»Å¾Ã¶Ã‹Ã¦Â»ÃºÂµÃ„ÃÂ»Ã–Ãƒ
 	new_customer_cur = item_cands_cur.at(idx_ci);
 }
 
@@ -1024,7 +1060,7 @@ template<typename D> inline void Layer<D>::change_table(int _new_table)
 }
 
 template<typename D> void Layer<D>::merge_customers()
-{//ÏÈ²ÉÑùÔÙÉ¾³ı²Í×À
+{//ÃÃˆÂ²Ã‰Ã‘Ã¹Ã”Ã™Ã‰Å¸Â³Ã½Â²ÃÃ—Ã€
 #ifdef PRINT_FUNC_NAME
 	cout << "merge_customer()" << endl;
 #endif
@@ -1099,7 +1135,7 @@ template<typename D> void Layer<D>::merge_customers()
 	}*/
 	/*change_customer(new_customer_cur);
 	new_table_cur = tables.at(new_customer_cur);
-	change_table(new_table_cur);//¸Ã²»¸Ã±£ÁôµÄÎÊÌâ*/
+	change_table(new_table_cur);//Å¾ÃƒÂ²Â»Å¾ÃƒÂ±Â£ÃÃ´ÂµÃ„ÃÃŠÃŒÃ¢*/
 }
 
 template<typename D> void Layer<D>::update_link()
@@ -1142,7 +1178,7 @@ template<typename D> void Layer<D>::sample_new_customer()
 #ifdef PRINT_FUNC_NAME
 	cout << "sample_new_customer()" << endl;
 #endif
-	sample_customer();//ÕâÀïÃæÓÃµÄlog_ÖµÒªÈ¡×Ô±¾²ãµÄºóÑé¼ÆËã£¬ÔÚ¼ÆËãlog_self_lin_likµÄÊ±ºòËã¹ı£¬ÓÉÓÚÊÇÕë¶Ô²»Í¬²ãµÄ¼ÆËã£¬ËùÒÔ²»»á±»¸ü¸Ä
+	sample_customer();//Ã•Ã¢Ã€Ã¯ÃƒÃ¦Ã“ÃƒÂµÃ„log_Ã–ÂµÃ’ÂªÃˆÂ¡Ã—Ã”Â±Å¸Â²Ã£ÂµÃ„ÂºÃ³Ã‘Ã©Å’Ã†Ã‹Ã£Â£Â¬Ã”ÃšÅ’Ã†Ã‹Ã£log_self_lin_likÂµÃ„ÃŠÂ±ÂºÃ²Ã‹Ã£Â¹Ã½Â£Â¬Ã“Ã‰Ã“ÃšÃŠÃ‡Ã•Ã«Â¶Ã”Â²Â»ÃÂ¬Â²Ã£ÂµÃ„Å’Ã†Ã‹Ã£Â£Â¬Ã‹Ã¹Ã’Ã”Â²Â»Â»Ã¡Â±Â»Å¾Ã¼Å¾Ã„
 	customers.at(cur_item) = new_customer_cur;
 	if (new_customer_cur != cur_item)
 	{
@@ -1154,7 +1190,7 @@ template<typename D> void Layer<D>::sample_new_customer()
 	}
 	else
 	{
-		new_table_cur = cur_item;//customerÉÏÃæÒÑ¾­¸³ÖµÁË
+		new_table_cur = cur_item;//customerÃ‰ÃÃƒÃ¦Ã’Ã‘Å¸Â­Å¾Â³Ã–ÂµÃÃ‹
 		tables.at(cur_item) = cur_item;
 		idx_group_cur = inds_groups.at(cur_item);
 		add_table();
@@ -1177,11 +1213,11 @@ template<typename D> void Layer<D>::get_cands_point(int _cur_point)
 #endif
 	if (child == NULL)
 	{//layer(0)
-		int i = inds_groups.at(_cur_point);//ÕÒµ½Õâ¸öword¶ÔÓ¦µÄgroup
-		vector<int> &inds_items_cur = inds_items.at(i);//ÕÒµ½Õâ¸ögroup µ±Ç°ËùÓĞwordµÄË÷ÒıÖµ
-		int j = _cur_point - inds_items_cur.front();//µ±Ç°µÄword¾àÀëÕâÒ»×é±êÇ©Î»ÖÃµÄ¶àÔ¶
-		if (item_candidates.empty())//ÓÃitem_candidates ×öÅĞ¶Ï£¬È·Ã»ÓĞ¶ÔËü½øĞĞ¸³Öµ²Ù×÷£¿
-		{//Èç¹ûitem_candidatesÊÇ¿ÕµÄ£¬¾Í¶Ôitem_cands_cur¸³inds_items_curÖĞµÄÖµ£¬Ò²¾ÍÊÇÕâÕâÒ»×éÖĞÄÇĞ©word µÄË÷Òı
+		int i = inds_groups.at(_cur_point);//Ã•Ã’ÂµÅ“Ã•Ã¢Å¾Ã¶wordÂ¶Ã”Ã“Å ÂµÃ„group
+		vector<int> &inds_items_cur = inds_items.at(i);//Ã•Ã’ÂµÅ“Ã•Ã¢Å¾Ã¶group ÂµÂ±Ã‡Â°Ã‹Ã¹Ã“ÃwordÂµÃ„Ã‹Ã·Ã’Ã½Ã–Âµ
+		int j = _cur_point - inds_items_cur.front();//ÂµÂ±Ã‡Â°ÂµÃ„wordÅ¸Ã Ã€Ã«Ã•Ã¢Ã’Â»Ã—Ã©Â±ÃªÃ‡Â©ÃÂ»Ã–ÃƒÂµÃ„Â¶Ã Ã”Â¶
+		if (item_candidates.empty())//Ã“Ãƒitem_candidates Ã—Ã¶Ã…ÃÂ¶ÃÂ£Â¬ÃˆÂ·ÃƒÂ»Ã“ÃÂ¶Ã”Ã‹Ã¼Å“Ã¸ÃÃÅ¾Â³Ã–ÂµÂ²Ã™Ã—Ã·Â£Â¿
+		{//ÃˆÃ§Â¹Ã»item_candidatesÃŠÃ‡Â¿Ã•ÂµÃ„Â£Â¬Å¸ÃÂ¶Ã”item_cands_curÅ¾Â³inds_items_curÃ–ÃÂµÃ„Ã–ÂµÂ£Â¬Ã’Â²Å¸ÃÃŠÃ‡Ã•Ã¢Ã•Ã¢Ã’Â»Ã—Ã©Ã–ÃÃ„Ã‡ÃÂ©word ÂµÃ„Ã‹Ã·Ã’Ã½
 			vector<int>::iterator start = inds_items_cur.begin();
 			vector<int>::iterator end = inds_items_cur.begin() + j + 1;
 			item_cands_cur.assign(start, end);//item_priors_cur.assign(item_cands_cur.size(), 1.0);
@@ -1189,27 +1225,27 @@ template<typename D> void Layer<D>::get_cands_point(int _cur_point)
 			log_item_priors_cur.back() = log_alpha_item;
 		}
 		else
-		{//Èç¹ûÓĞÖµ£¬Ê¹ÓÃitem_candidateÖĞµÄÖµ¶Ôµ±Ç°µÄitem_cands½øĞĞ¸³Öµ
+		{//ÃˆÃ§Â¹Ã»Ã“ÃÃ–ÂµÂ£Â¬ÃŠÂ¹Ã“Ãƒitem_candidateÃ–ÃÂµÃ„Ã–ÂµÂ¶Ã”ÂµÂ±Ã‡Â°ÂµÃ„item_candsÅ“Ã¸ÃÃÅ¾Â³Ã–Âµ
 			item_cands_cur = item_candidates.at(i).at(j);//item_priors_cur = item_priors.at(i).at(j);
 			log_item_priors_cur = log_item_priors.at(i).at(j);
 		}
 	}
 	else
-	{//layer£¨1£©£¬layer£¨2£©
+	{//layerÂ£Å¡1Â£Â©Â£Â¬layerÂ£Å¡2Â£Â©
 		item_cands_cur.clear();
 		item_priors_cur.clear();
 		log_item_priors_cur.clear();
-		int idx_table_child = _cur_point;//µ±Ç°word
-		int idx_group_child = child->inds_groups.at(idx_table_child);//¶ÔÓ¦µÄchildÖĞµÄgroupË÷Òı
-		vector<int> &group_candidates_i = child->group_candidates.at(idx_group_child);//¶¼ÒÀÀµÓÚchild µÄgroup candidate
+		int idx_table_child = _cur_point;//ÂµÂ±Ã‡Â°word
+		int idx_group_child = child->inds_groups.at(idx_table_child);//Â¶Ã”Ã“Å ÂµÃ„childÃ–ÃÂµÃ„groupÃ‹Ã·Ã’Ã½
+		vector<int> &group_candidates_i = child->group_candidates.at(idx_group_child);//Â¶Å’Ã’Ã€Ã€ÂµÃ“Ãšchild ÂµÃ„group candidate
 		vector<double> &group_priors_i = child->group_priors.at(idx_group_child);
 		vector<double> &log_group_priors_i = child->log_group_priors.at(idx_group_child);
 		vector<int>::iterator it_c = group_candidates_i.begin();
 		vector<double>::iterator it_p = group_priors_i.begin();
 		vector<double>::iterator it_log_p = log_group_priors_i.begin();
-		for (; it_c != group_candidates_i.end() - 1; it_c++, it_p++, it_log_p++)//ºÍËùÔÚµÄ²Í¹İÓĞÁ´½ÓµÄ²Í¹İ
+		for (; it_c != group_candidates_i.end() - 1; it_c++, it_p++, it_log_p++)//ÂºÃÃ‹Ã¹Ã”ÃšÂµÃ„Â²ÃÂ¹ÃÃ“ÃÃÅ½Å“Ã“ÂµÃ„Â²ÃÂ¹Ã
 		{
-			list<int> &uni_tables_i = child->uni_tables.at(*it_c);//child layerÖĞ Óë¸Ã²Í¹İÁ´½ÓµÄ²Í¹İÖĞµÄËùÓĞ²Í×À
+			list<int> &uni_tables_i = child->uni_tables.at(*it_c);//child layerÃ–Ã Ã“Ã«Å¾ÃƒÂ²ÃÂ¹ÃÃÅ½Å“Ã“ÂµÃ„Â²ÃÂ¹ÃÃ–ÃÂµÃ„Ã‹Ã¹Ã“ÃÂ²ÃÃ—Ã€
 			list<int>::iterator it_t = uni_tables_i.begin();
 			for (; it_t != uni_tables_i.end(); it_t++)
 			{
@@ -1218,7 +1254,7 @@ template<typename D> void Layer<D>::get_cands_point(int _cur_point)
 			item_priors_cur.insert(item_priors_cur.end(), uni_tables_i.size(), *it_p);
 			log_item_priors_cur.insert(log_item_priors_cur.end(), uni_tables_i.size(), *it_log_p);
 		}
-		list<int> &uni_tables_i = child->uni_tables.at(idx_group_child);//ËùÓĞÔÚËüÇ°ÃæµÄ×é¶¼ÄÉÈëºòÑ¡
+		list<int> &uni_tables_i = child->uni_tables.at(idx_group_child);//Ã‹Ã¹Ã“ÃÃ”ÃšÃ‹Ã¼Ã‡Â°ÃƒÃ¦ÂµÃ„Ã—Ã©Â¶Å’Ã„Ã‰ÃˆÃ«ÂºÃ²Ã‘Â¡
 		list<int>::iterator it_t = uni_tables_i.begin();
 		while (it_t != uni_tables_i.end() && _cur_point > *it_t)
 		{//cout << "uni_tables_i for item_cands_cur" << *it_t << endl;
@@ -1227,7 +1263,7 @@ template<typename D> void Layer<D>::get_cands_point(int _cur_point)
 			log_item_priors_cur.push_back(0.0);
 			it_t++;
 		}
-		item_cands_cur.push_back(idx_table_child);//¸ø×Ô¼ºÁôµÄÒ»¸öÎ»ÖÃºÍÏàÓ¦µÄ¸ÅÂÊÖµ£¬
+		item_cands_cur.push_back(idx_table_child);//Å¾Ã¸Ã—Ã”Å’ÂºÃÃ´ÂµÃ„Ã’Â»Å¾Ã¶ÃÂ»Ã–ÃƒÂºÃÃÃ Ã“Å ÂµÃ„Å¾Ã…Ã‚ÃŠÃ–ÂµÂ£Â¬
 		item_priors_cur.push_back(alpha_item);
 		log_item_priors_cur.push_back(log_alpha_item);
 	}
@@ -1300,7 +1336,7 @@ template<typename D> void Layer<D>::update_point_link(int _cur_point)
 #endif
 	customers.at(_cur_point) = new_customer_cur;
 	tables.at(_cur_point) = new_table_cur;
-	change_table(new_table_cur);//Õâ¸öÃ»¸Ä 1201
+	change_table(new_table_cur);//Ã•Ã¢Å¾Ã¶ÃƒÂ»Å¾Ã„ 1201
 }
 template<typename D> void Layer<D>::sample_link_points(int _cur_point)
 {
@@ -1311,8 +1347,8 @@ template<typename D> void Layer<D>::sample_link_points(int _cur_point)
 	vector<int> &links_cur = links.at(_cur_point);
 	for (vector<int>::iterator it = links_cur.begin(); it != links_cur.end(); it++)
 	{
-		cur_link = *it;//²»ÄÜÈÃitem µÄ²ÉÑùºÍlinkµÄ²ÉÑù»ìÔÚÒ»Æğ£¬ÕâÑù»áÌø¹ıºÜ¶àitemµÄ²ÉÑù
-		sample_for_single_sfl();//1201Ö®ºó¾ÍÃ»ÓĞ¸Ä¶¯ÁË
+		cur_link = *it;//Â²Â»Ã„ÃœÃˆÃƒitem ÂµÃ„Â²Ã‰Ã‘Ã¹ÂºÃlinkÂµÃ„Â²Ã‰Ã‘Ã¹Â»Ã¬Ã”ÃšÃ’Â»Ã†Ã°Â£Â¬Ã•Ã¢Ã‘Ã¹Â»Ã¡ÃŒÃ¸Â¹Ã½ÂºÃœÂ¶Ã itemÂµÃ„Â²Ã‰Ã‘Ã¹
+		sample_for_single_sfl();//1201Ã–Â®ÂºÃ³Å¸ÃÃƒÂ»Ã“ÃÅ¾Ã„Â¶Â¯ÃÃ‹
 	}
 }
 template<typename D> void Layer<D>::sample_and_traverse(int _cur_point)
@@ -1339,7 +1375,7 @@ template<typename D> void Layer<D>::sample_and_traverse(int _cur_point)
 		}
 	}
 	sample_link_points(_cur_point);
-	//°Ñtraverse·ÅÔÚÍâÃæ
+	//Â°Ã‘traverseÂ·Ã…Ã”ÃšÃÃ¢ÃƒÃ¦
 
 
 
@@ -1384,16 +1420,16 @@ template<typename D> void Layer<D>::sample_for_root(int _cur_point)
 	get_cands_point(_cur_point);
 	if (item_cands_cur.size() == 1)
 	{
-		return;//Èç¹ûÖ»ÓĞ×Ô¼º¾ÍÍË³öÑ­»·ÁË
+		return;//ÃˆÃ§Â¹Ã»Ã–Â»Ã“ÃÃ—Ã”Å’ÂºÅ¸ÃÃÃ‹Â³Ã¶Ã‘Â­Â»Â·ÃÃ‹
 	}
 	collect_clusters();
 	if (parent)
 	{
-		parent->check_link_status_point(_cur_point);//Èç¹û²»ÊÇ×î¶¥²ã£¨parent²»ÊÇnull£©,¾ÍÏòÉÏ×·Ëİ£¬Ö±µ½×î¶¥²ãÈ»ºócollect_connections.µÃµ½ÉÏÒ»²ã²ãconnection_start ºÍ connection_end
+		parent->check_link_status_point(_cur_point);//ÃˆÃ§Â¹Ã»Â²Â»ÃŠÃ‡Ã—Ã®Â¶Â¥Â²Ã£Â£Å¡parentÂ²Â»ÃŠÃ‡nullÂ£Â©,Å¸ÃÃÃ²Ã‰ÃÃ—Â·Ã‹ÃÂ£Â¬Ã–Â±ÂµÅ“Ã—Ã®Â¶Â¥Â²Ã£ÃˆÂ»ÂºÃ³collect_connections.ÂµÃƒÂµÅ“Ã‰ÃÃ’Â»Â²Ã£Â²Ã£connection_start ÂºÃ connection_end
 	}
 	else
 	{
-		collect_connections_points(_cur_point);//µÃµ½±¾²ãconnection_start ºÍ connection_end
+		collect_connections_points(_cur_point);//ÂµÃƒÂµÅ“Â±Å¸Â²Ã£connection_start ÂºÃ connection_end
 	}
 	old_cls_cur = get_cluster(_cur_point);
 	base.del_data(*pos_classqq.at(old_cls_cur), *it_stat_cur);
@@ -1406,12 +1442,12 @@ template<typename D> void Layer<D>::sample_for_root(int _cur_point)
 	else
 	{
 		base.reset_class(qq_temp);
-		log_self_link_lik = base.marg_likelihood(qq_temp, *cur_stat);//¶ÔÓÚ¶¥²ãÀ´Ëµ£¬°´Àícur_stat Ó¦¸ÃºÍ it_stat_curÏàµÈ
+		log_self_link_lik = base.marg_likelihood(qq_temp, *cur_stat);//Â¶Ã”Ã“ÃšÂ¶Â¥Â²Ã£Ã€Å½Ã‹ÂµÂ£Â¬Â°Å½Ã€Ã­cur_stat Ã“Å Å¾ÃƒÂºÃ it_stat_curÃÃ ÂµÃˆ
 	}
 	compute_log_probs_sampling();
 	sample_customer();
 	if (new_customer_cur != old_customer_cur)
-	{//¶ÔÓÚ¸ù½ÚµãµÄÌÖÂÛÖĞ£¬old_customer_cur==_cur_point,Èônew_customer_cur != old_customer_curÔò»á²úÉú½ÚµãÏûÊ§µÄÇé¿ö
+	{//Â¶Ã”Ã“ÃšÅ¾Ã¹Å“ÃšÂµÃ£ÂµÃ„ÃŒÃ–Ã‚Ã›Ã–ÃÂ£Â¬old_customer_cur==_cur_point,ÃˆÃ´new_customer_cur != old_customer_curÃ”Ã²Â»Ã¡Â²ÃºÃ‰ÃºÅ“ÃšÂµÃ£ÃÃ»ÃŠÂ§ÂµÃ„Ã‡Ã©Â¿Ã¶
 		new_table_cur = tables.at(new_customer_cur);
 		update_point_link(_cur_point);
 		new_cls_cur = get_cluster(new_customer_cur);
@@ -1452,7 +1488,7 @@ template<typename D> void Layer<D>::add_table_at_point(int _cur_point)
 }
 template<typename D> void Layer<D>::sample_new_customer_point(int _cur_point)
 {
-	sample_customer();//ÕâÀïÃæÓÃµÄlog_ÖµÒªÈ¡×Ô±¾²ãµÄºóÑé¼ÆËã£¬ÔÚ¼ÆËãlog_self_lin_likµÄÊ±ºòËã¹ı£¬ÓÉÓÚÊÇÕë¶Ô²»Í¬²ãµÄ¼ÆËã£¬ËùÒÔ²»»á±»¸ü¸Ä
+	sample_customer();//Ã•Ã¢Ã€Ã¯ÃƒÃ¦Ã“ÃƒÂµÃ„log_Ã–ÂµÃ’ÂªÃˆÂ¡Ã—Ã”Â±Å¸Â²Ã£ÂµÃ„ÂºÃ³Ã‘Ã©Å’Ã†Ã‹Ã£Â£Â¬Ã”ÃšÅ’Ã†Ã‹Ã£log_self_lin_likÂµÃ„ÃŠÂ±ÂºÃ²Ã‹Ã£Â¹Ã½Â£Â¬Ã“Ã‰Ã“ÃšÃŠÃ‡Ã•Ã«Â¶Ã”Â²Â»ÃÂ¬Â²Ã£ÂµÃ„Å’Ã†Ã‹Ã£Â£Â¬Ã‹Ã¹Ã’Ã”Â²Â»Â»Ã¡Â±Â»Å¾Ã¼Å¾Ã„
 	customers.at(_cur_point) = new_customer_cur;
 	if (new_customer_cur != _cur_point)
 	{
@@ -1463,7 +1499,7 @@ template<typename D> void Layer<D>::sample_new_customer_point(int _cur_point)
 	}
 	else
 	{
-		new_table_cur = _cur_point;//customerÉÏÃæÒÑ¾­¸³ÖµÁË
+		new_table_cur = _cur_point;//customerÃ‰ÃÃƒÃ¦Ã’Ã‘Å¸Â­Å¾Â³Ã–ÂµÃÃ‹
 		tables.at(_cur_point) = _cur_point;
 		idx_group_cur = inds_groups.at(_cur_point);
 		add_table_at_point(_cur_point);
@@ -1486,7 +1522,7 @@ template<typename D> void Layer<D>::sample_for_leaf(int _cur_point)
 	idx_group_cur = inds_groups.at(_cur_point);
 	get_cands_point(_cur_point);
 	collect_clusters();
-	collect_connections_points(_cur_point);//µÃµ½±¾²ãconnection_start ºÍ connection_end
+	collect_connections_points(_cur_point);//ÂµÃƒÂµÅ“Â±Å¸Â²Ã£connection_start ÂºÃ connection_end
 	old_cls_cur = get_cluster(_cur_point);
 	base.del_data(*pos_classqq.at(old_cls_cur), *it_stat_cur);
 	is_computed.assign(trainss.size(), false);
@@ -1498,12 +1534,12 @@ template<typename D> void Layer<D>::sample_for_leaf(int _cur_point)
 	else
 	{
 		base.reset_class(qq_temp);
-		log_self_link_lik = base.marg_likelihood(qq_temp, *it_stat_cur);//¶ÔÓÚ¶¥²ãÀ´Ëµ£¬°´Àícur_stat Ó¦¸ÃºÍ it_stat_curÏàµÈ
+		log_self_link_lik = base.marg_likelihood(qq_temp, *it_stat_cur);//Â¶Ã”Ã“ÃšÂ¶Â¥Â²Ã£Ã€Å½Ã‹ÂµÂ£Â¬Â°Å½Ã€Ã­cur_stat Ã“Å Å¾ÃƒÂºÃ it_stat_curÃÃ ÂµÃˆ
 	}
 	compute_log_probs_sampling();
 	sample_customer();
 	if (new_customer_cur != old_customer_cur)
-	{//¶ÔÓÚÒ¶×Ó½ÚµãµÄÌÖÂÛÖĞ,¿ÉÄÜ´æÔÚ×ÔÁ¬½Ó£¬µ«ÊÇ²»»áÓĞÉÏ²ã½ÚµãÏûÊ§µÄÇé¿ö
+	{//Â¶Ã”Ã“ÃšÃ’Â¶Ã—Ã“Å“ÃšÂµÃ£ÂµÃ„ÃŒÃ–Ã‚Ã›Ã–Ã,Â¿Ã‰Ã„ÃœÅ½Ã¦Ã”ÃšÃ—Ã”ÃÂ¬Å“Ã“Â£Â¬ÂµÂ«ÃŠÃ‡Â²Â»Â»Ã¡Ã“ÃÃ‰ÃÂ²Ã£Å“ÃšÂµÃ£ÃÃ»ÃŠÂ§ÂµÃ„Ã‡Ã©Â¿Ã¶
 		if (new_customer_cur != _cur_point)
 		{
 			new_table_cur = tables.at(new_customer_cur);
@@ -1550,59 +1586,59 @@ template<typename D> void Layer<D>::sample_for_point()
 template<typename D> void Layer<D>::sample_for_single()
 {
 	cout << cur_item << endl;
-	idx_group_cur = inds_groups.at(cur_item);//µ±Ç°½ÚµãËùÔÚµÄÍÅ´Ø±êºÅ
-	get_candidates();//item_cand_cur ÊÕ¼¯ÔÚ±¾²Í¹İÖĞËùÓĞÔÚcur_itemÖ®Ç°³öÏÖµÄ¹Ë¿Í£¬ÒÔ¼°ÔÚ×Ó²ãÖĞËùÓĞÍ¨¹ı¾àÀëD¶¨ÒåµÄÓĞÁ´½ÓµÄ²Í¹İÖĞµÄ²Í×À£¨ÔÚ±¾²ãÖĞ½Ğ×ö¹Ë¿Í£©
+	idx_group_cur = inds_groups.at(cur_item);//ÂµÂ±Ã‡Â°Å“ÃšÂµÃ£Ã‹Ã¹Ã”ÃšÂµÃ„ÃÃ…Å½Ã˜Â±ÃªÂºÃ…
+	get_candidates();//item_cand_cur ÃŠÃ•Å’Â¯Ã”ÃšÂ±Å¸Â²ÃÂ¹ÃÃ–ÃÃ‹Ã¹Ã“ÃÃ”Ãšcur_itemÃ–Â®Ã‡Â°Â³Ã¶ÃÃ–ÂµÃ„Â¹Ã‹Â¿ÃÂ£Â¬Ã’Ã”Å’Â°Ã”ÃšÃ—Ã“Â²Ã£Ã–ÃÃ‹Ã¹Ã“ÃÃÅ¡Â¹Ã½Å¸Ã Ã€Ã«DÂ¶Å¡Ã’Ã¥ÂµÃ„Ã“ÃÃÅ½Å“Ã“ÂµÃ„Â²ÃÂ¹ÃÃ–ÃÂµÃ„Â²ÃÃ—Ã€Â£Å¡Ã”ÃšÂ±Å¸Â²Ã£Ã–ÃÅ“ÃÃ—Ã¶Â¹Ã‹Â¿ÃÂ£Â©
 	if (item_cands_cur.size() == 1)
 	{
-		return;//Èç¹ûÖ»ÓĞ×Ô¼º¾ÍÍË³öÑ­»·ÁË
+		return;//ÃˆÃ§Â¹Ã»Ã–Â»Ã“ÃÃ—Ã”Å’ÂºÅ¸ÃÃÃ‹Â³Ã¶Ã‘Â­Â»Â·ÃÃ‹
 	}
-	collect_clusters();//uni_cls_cands_cur,´æ´¢ÁËÕâĞ©ºòÑ¡Á´½ÓµÄ¶¥²ãÍÅ
+	collect_clusters();//uni_cls_cands_cur,Å½Ã¦Å½Â¢ÃÃ‹Ã•Ã¢ÃÂ©ÂºÃ²Ã‘Â¡ÃÅ½Å“Ã“ÂµÃ„Â¶Â¥Â²Ã£ÃÃ…
 	old_customer_cur = customers.at(cur_item);
 	old_table_cur = tables.at(old_customer_cur);
 	is_self_linked = (old_customer_cur == cur_item) ? true : false;
 	if (is_self_linked)
-	{//Èç¹ûÔÚÕâÒ»²ãÓë×Ô¼ºÁ¬½Ó
+	{//ÃˆÃ§Â¹Ã»Ã”ÃšÃ•Ã¢Ã’Â»Â²Ã£Ã“Ã«Ã—Ã”Å’ÂºÃÂ¬Å“Ã“
 		if (parent)
 		{
-			parent->check_link_status();//Èç¹û²»ÊÇ×î¶¥²ã£¨parent²»ÊÇnull£©,¾ÍÏòÉÏ×·Ëİ£¬Ö±µ½×î¶¥²ãÈ»ºócollect_connections.µÃµ½ÉÏÒ»²ã²ãconnection_start ºÍ connection_end
+			parent->check_link_status();//ÃˆÃ§Â¹Ã»Â²Â»ÃŠÃ‡Ã—Ã®Â¶Â¥Â²Ã£Â£Å¡parentÂ²Â»ÃŠÃ‡nullÂ£Â©,Å¸ÃÃÃ²Ã‰ÃÃ—Â·Ã‹ÃÂ£Â¬Ã–Â±ÂµÅ“Ã—Ã®Â¶Â¥Â²Ã£ÃˆÂ»ÂºÃ³collect_connections.ÂµÃƒÂµÅ“Ã‰ÃÃ’Â»Â²Ã£Â²Ã£connection_start ÂºÃ connection_end
 		}
 		else
 		{
-			collect_connections();//µÃµ½±¾²ãconnection_start ºÍ connection_end
+			collect_connections();//ÂµÃƒÂµÅ“Â±Å¸Â²Ã£connection_start ÂºÃ connection_end
 		}
 	}
 	else
 	{
 		collect_connections();
 	}
-	old_cls_cur = get_cluster(cur_item);//Ö»ÊÇµÃµ½×Ô¼ºµÄÍÅ´Ø±êºÅ
-	base.del_data(*pos_classqq.at(old_cls_cur), *it_stat_cur);//°ÑÕû¸öÍÅ´ØÖĞÓëcur_itemÏàÁ¬µÄword µÄÍ³¼ÆÖµÉ¾µô
+	old_cls_cur = get_cluster(cur_item);//Ã–Â»ÃŠÃ‡ÂµÃƒÂµÅ“Ã—Ã”Å’ÂºÂµÃ„ÃÃ…Å½Ã˜Â±ÃªÂºÃ…
+	base.del_data(*pos_classqq.at(old_cls_cur), *it_stat_cur);//Â°Ã‘Ã•Ã»Å¾Ã¶ÃÃ…Å½Ã˜Ã–ÃÃ“Ã«cur_itemÃÃ ÃÂ¬ÂµÃ„word ÂµÃ„ÃÂ³Å’Ã†Ã–ÂµÃ‰Å¸ÂµÃ´
 	is_computed.assign(trainss.size(), false);
-	compute_marg_liks();//¼ÆËãÍÅ´Øuni_cls_cands_curµÄËÆÈ»ÖµÈ»ºó´æ´¢ÔÚpred_links.at(c)ÖĞ,(ÒòÎª¼ôµôÒ»Ğ©Ö®ºó»áÓĞ¸Ä±ä)
+	compute_marg_liks();//Å’Ã†Ã‹Ã£ÃÃ…Å½Ã˜uni_cls_cands_curÂµÃ„Ã‹Ã†ÃˆÂ»Ã–ÂµÃˆÂ»ÂºÃ³Å½Ã¦Å½Â¢Ã”Ãšpred_links.at(c)Ã–Ã,(Ã’Ã²ÃÂªÅ’Ã´ÂµÃ´Ã’Â»ÃÂ©Ã–Â®ÂºÃ³Â»Ã¡Ã“ÃÅ¾Ã„Â±Ã¤)
 	/*cout << "we are here" << endl;*/
-	//ÉÏÃæÊÇËãÁ´½Óµ½ÆäËûµÄµØ·½µÄËÆÈ»£¬ºóÃæÊÇËã×ÔÁ¬½ÓµÄËÆÈ»
+	//Ã‰ÃÃƒÃ¦ÃŠÃ‡Ã‹Ã£ÃÅ½Å“Ã“ÂµÅ“Ã†Ã¤Ã‹Ã»ÂµÃ„ÂµÃ˜Â·Å“ÂµÃ„Ã‹Ã†ÃˆÂ»Â£Â¬ÂºÃ³ÃƒÃ¦ÃŠÃ‡Ã‹Ã£Ã—Ã”ÃÂ¬Å“Ã“ÂµÃ„Ã‹Ã†ÃˆÂ»
 
 	if (parent)
 	{
 		if (is_self_linked)
 		{
 			
-			log_self_link_lik = base.marg_likelihood(*pos_classqq.at(old_cls_cur), *it_stat_cur);//¼ÆËãÈç¹û»¹ÊÇÁ´½Óµ½old_cls_curÉÏµÄËÆÈ»
+			log_self_link_lik = base.marg_likelihood(*pos_classqq.at(old_cls_cur), *it_stat_cur);//Å’Ã†Ã‹Ã£ÃˆÃ§Â¹Ã»Â»Â¹ÃŠÃ‡ÃÅ½Å“Ã“ÂµÅ“old_cls_curÃ‰ÃÂµÃ„Ã‹Ã†ÃˆÂ»
 			/*cout << "we are here " << endl;*/
 		}
 		else
-		{//²»ÊÇ×ÔÁ¬½Ó
-			log_self_link_lik = parent->compute_log_self_link_lik();//¹¹Ôì¹«Ê½5.8
+		{//Â²Â»ÃŠÃ‡Ã—Ã”ÃÂ¬Å“Ã“
+			log_self_link_lik = parent->compute_log_self_link_lik();//Â¹Â¹Ã”Ã¬Â¹Â«ÃŠÅ“5.8
 		}
 	}
 	else
-	{//¶ÔÓÚ¶¥²ã
+	{//Â¶Ã”Ã“ÃšÂ¶Â¥Â²Ã£
 		base.reset_class(qq_temp);
 		log_self_link_lik = base.marg_likelihood(qq_temp, *it_stat_cur);
 	}
-	compute_log_probs_sampling();//ÕâÀïÑ°ÕÒ×î´óµÄ´æÔÚmax_log_prob
+	compute_log_probs_sampling();//Ã•Ã¢Ã€Ã¯Ã‘Â°Ã•Ã’Ã—Ã®Å½Ã³ÂµÃ„Å½Ã¦Ã”Ãšmax_log_prob
 	sample_customer();
-	//ÒÑ¾­µÃµ½ĞÂµÄ²ÉÑùÁ´½Ó£¬¿ªÊ¼¼ÆËãµ±Ç°Á´½Ó»á¶Ô²Í×ÀÅäÖÃ²úÉúÊ²Ã´Ó°Ïì
+	//Ã’Ã‘Å¸Â­ÂµÃƒÂµÅ“ÃÃ‚ÂµÃ„Â²Ã‰Ã‘Ã¹ÃÅ½Å“Ã“Â£Â¬Â¿ÂªÃŠÅ’Å’Ã†Ã‹Ã£ÂµÂ±Ã‡Â°ÃÅ½Å“Ã“Â»Ã¡Â¶Ã”Â²ÃÃ—Ã€Ã…Ã¤Ã–ÃƒÂ²ÃºÃ‰ÃºÃŠÂ²ÃƒÅ½Ã“Â°ÃÃ¬
 	if (new_customer_cur != old_customer_cur)
 	{
 		//cout << "got a new customer :" << endl;
@@ -1612,17 +1648,17 @@ template<typename D> void Layer<D>::sample_for_single()
 			new_table_cur = tables.at(new_customer_cur);
 			update_link();
 			new_cls_cur = get_cluster(new_customer_cur);
-			//base.add_data(*pos_classqq.at(new_cls_cur), *it_stat_cur);//1130,ÕâÀïÈç¹û½øĞĞÉÏ²ãµÄ²ÉÑùµÄ»°£¬¾Í²»ÄÜ°ÑËùÓĞµÄlinkËù´øµÄ×ÓÊ÷µÄÍ³¼ÆÁ¿¶¼¼Ó½øÈ¥
+			//base.add_data(*pos_classqq.at(new_cls_cur), *it_stat_cur);//1130,Ã•Ã¢Ã€Ã¯ÃˆÃ§Â¹Ã»Å“Ã¸ÃÃÃ‰ÃÂ²Ã£ÂµÃ„Â²Ã‰Ã‘Ã¹ÂµÃ„Â»Â°Â£Â¬Å¸ÃÂ²Â»Ã„ÃœÂ°Ã‘Ã‹Ã¹Ã“ÃÂµÃ„linkÃ‹Ã¹Å½Ã¸ÂµÃ„Ã—Ã“ÃŠÃ·ÂµÃ„ÃÂ³Å’Ã†ÃÂ¿Â¶Å’Å’Ã“Å“Ã¸ÃˆÂ¥
 			
-			//¿ÉÒÔ°ÑÕâÒ»²½·Åµ½ÅĞ¶ÏÀïÃæ
+			//Â¿Ã‰Ã’Ã”Â°Ã‘Ã•Ã¢Ã’Â»Â²Å“Â·Ã…ÂµÅ“Ã…ÃÂ¶ÃÃ€Ã¯ÃƒÃ¦
 			if (is_self_linked)
-			{//ÏÈµ½ÉÏ²ãÈ¥²ÉÑù£¬ÔÚÉ¾³ı²Í×À
+			{//ÃÃˆÂµÅ“Ã‰ÃÂ²Ã£ÃˆÂ¥Â²Ã‰Ã‘Ã¹Â£Â¬Ã”ÃšÃ‰Å¸Â³Ã½Â²ÃÃ—Ã€
 				base.add_data(*pos_classqq.at(new_cls_cur), *cur_stat);//1201
 				delete_table(cur_item);
 				if (parent)
 				{
 					//parent->new_customer_cur = new_table_cur;//1201
-					parent->merge_customers();//×¢ÒâÕâÀïÊÇÔÚÉÏ²ãÖĞ×öµÄ´¦Àí
+					parent->merge_customers();//Ã—Â¢Ã’Ã¢Ã•Ã¢Ã€Ã¯ÃŠÃ‡Ã”ÃšÃ‰ÃÂ²Ã£Ã–ÃÃ—Ã¶ÂµÃ„Å½Å Ã€Ã­
 				}
 				else
 				{
@@ -1632,7 +1668,7 @@ template<typename D> void Layer<D>::sample_for_single()
 				//if (parent)
 				//{
 				//	parent->new_customer_cur = new_table_cur;
-				//	parent->merge_customers();//×¢ÒâÕâÀïÊÇÔÚÉÏ²ãÖĞ×öµÄ´¦Àí
+				//	parent->merge_customers();//Ã—Â¢Ã’Ã¢Ã•Ã¢Ã€Ã¯ÃŠÃ‡Ã”ÃšÃ‰ÃÂ²Ã£Ã–ÃÃ—Ã¶ÂµÃ„Å½Å Ã€Ã­
 				//}
 				//else
 				//{
@@ -1676,7 +1712,7 @@ template<typename D> void Layer<D>::run_sampler()
 	if (!child)
 	{
 		timer_t = clock();
-		//Ëæ»úµÈ¼ä¸ô²ÉÑù
+		//Ã‹Ã¦Â»ÃºÂµÃˆÅ’Ã¤Å¾Ã´Â²Ã‰Ã‘Ã¹
 		//int a = 1, b = 100;
 		//srand((unsigned)clock());
 		//int space = (rand() % (b - a + 1)) + a;
@@ -1725,17 +1761,17 @@ template<typename D> void Layer<D>::get_candidates_sfl()
 	item_cands_cur_sfl.clear();
 	item_priors_cur_sfl.clear();
 	log_item_priors_cur_sfl.clear();
-	int idx_table_child = cur_link;//µ±Ç°word
-	int idx_group_child = child->inds_groups.at(idx_table_child);//¶ÔÓ¦µÄchildÖĞµÄgroupË÷Òı
-	vector<int> &group_candidates_i = child->group_candidates.at(idx_group_child);//¶¼ÒÀÀµÓÚchild µÄgroup candidate
+	int idx_table_child = cur_link;//ÂµÂ±Ã‡Â°word
+	int idx_group_child = child->inds_groups.at(idx_table_child);//Â¶Ã”Ã“Å ÂµÃ„childÃ–ÃÂµÃ„groupÃ‹Ã·Ã’Ã½
+	vector<int> &group_candidates_i = child->group_candidates.at(idx_group_child);//Â¶Å’Ã’Ã€Ã€ÂµÃ“Ãšchild ÂµÃ„group candidate
 	vector<double> &group_priors_i = child->group_priors.at(idx_group_child);
 	vector<double> &log_group_priors_i = child->log_group_priors.at(idx_group_child);
 	vector<int>::iterator it_c = group_candidates_i.begin();
 	vector<double>::iterator it_p = group_priors_i.begin();
 	vector<double>::iterator it_log_p = log_group_priors_i.begin();
-	for (; it_c != group_candidates_i.end() - 1; it_c++, it_p++, it_log_p++)//ºÍËùÔÚµÄ²Í¹İÓĞÁ´½ÓµÄ²Í¹İ
+	for (; it_c != group_candidates_i.end() - 1; it_c++, it_p++, it_log_p++)//ÂºÃÃ‹Ã¹Ã”ÃšÂµÃ„Â²ÃÂ¹ÃÃ“ÃÃÅ½Å“Ã“ÂµÃ„Â²ÃÂ¹Ã
 	{
-		list<int> &uni_tables_i = child->uni_tables.at(*it_c);//child layerÖĞ Óë¸Ã²Í¹İÁ´½ÓµÄ²Í¹İÖĞµÄËùÓĞ²Í×À
+		list<int> &uni_tables_i = child->uni_tables.at(*it_c);//child layerÃ–Ã Ã“Ã«Å¾ÃƒÂ²ÃÂ¹ÃÃÅ½Å“Ã“ÂµÃ„Â²ÃÂ¹ÃÃ–ÃÂµÃ„Ã‹Ã¹Ã“ÃÂ²ÃÃ—Ã€
 		list<int>::iterator it_t = uni_tables_i.begin();
 		for (; it_t != uni_tables_i.end(); it_t++)
 		{
@@ -1744,7 +1780,7 @@ template<typename D> void Layer<D>::get_candidates_sfl()
 		item_priors_cur_sfl.insert(item_priors_cur_sfl.end(), uni_tables_i.size(), *it_p);
 		log_item_priors_cur_sfl.insert(log_item_priors_cur_sfl.end(), uni_tables_i.size(), *it_log_p);
 	}
-	list<int> &uni_tables_i = child->uni_tables.at(idx_group_child);//ËùÓĞÔÚËüÇ°ÃæµÄ×é¶¼ÄÉÈëºòÑ¡
+	list<int> &uni_tables_i = child->uni_tables.at(idx_group_child);//Ã‹Ã¹Ã“ÃÃ”ÃšÃ‹Ã¼Ã‡Â°ÃƒÃ¦ÂµÃ„Ã—Ã©Â¶Å’Ã„Ã‰ÃˆÃ«ÂºÃ²Ã‘Â¡
 	list<int>::iterator it_t = uni_tables_i.begin();
 	while (it_t != uni_tables_i.end() && cur_link > *it_t )
 	{//cout << "uni_tables_i for item_cands_cur" << *it_t << endl;
@@ -1757,7 +1793,7 @@ template<typename D> void Layer<D>::get_candidates_sfl()
 		log_item_priors_cur_sfl.push_back(0.0);
 		it_t++;
 	}
-	item_cands_cur_sfl.push_back(idx_table_child);//¸ø×Ô¼ºÁôµÄÒ»¸öÎ»ÖÃºÍÏàÓ¦µÄ¸ÅÂÊÖµ£¬
+	item_cands_cur_sfl.push_back(idx_table_child);//Å¾Ã¸Ã—Ã”Å’ÂºÃÃ´ÂµÃ„Ã’Â»Å¾Ã¶ÃÂ»Ã–ÃƒÂºÃÃÃ Ã“Å ÂµÃ„Å¾Ã…Ã‚ÃŠÃ–ÂµÂ£Â¬
 	item_priors_cur_sfl.push_back(alpha_item);
 	log_item_priors_cur_sfl.push_back(log_alpha_item);
 
@@ -1782,14 +1818,14 @@ template<typename D> void Layer<D>::collect_clusters_sfl()
 #endif
 	cls_cands_cur_sfl.clear();
 	uni_cls_cands_cur_sfl.clear();
-	vector<int>::iterator it, end = item_cands_cur_sfl.end() - 1;//ÕâÀïÃ»°üÀ¨×ÔÁ¬½Ó
+	vector<int>::iterator it, end = item_cands_cur_sfl.end() - 1;//Ã•Ã¢Ã€Ã¯ÃƒÂ»Â°Ã¼Ã€Å¡Ã—Ã”ÃÂ¬Å“Ã“
 	int cluster_i;
 	vector<bool> flag(trainss.size(), false);
 	for (it = item_cands_cur_sfl.begin(); it != end; it++)
 	{
-		cluster_i = get_cluster_sfl(*it);//µÃµ½×î¶¥²ãµÄ²Í×ÀºÅ
+		cluster_i = get_cluster_sfl(*it);//ÂµÃƒÂµÅ“Ã—Ã®Â¶Â¥Â²Ã£ÂµÃ„Â²ÃÃ—Ã€ÂºÃ…
 		cls_cands_cur_sfl.push_back(cluster_i);
-		if (!flag.at(cluster_i))//±£Ö¤´æÔÚuni_cls_cands_cur ÖĞµÄ±êºÅÊÇÃ»ÓĞÖØ¸´µÄ
+		if (!flag.at(cluster_i))//Â±Â£Ã–â‚¬Å½Ã¦Ã”Ãšuni_cls_cands_cur Ã–ÃÂµÃ„Â±ÃªÂºÃ…ÃŠÃ‡ÃƒÂ»Ã“ÃÃ–Ã˜Å¾Å½ÂµÃ„
 		{
 			uni_cls_cands_cur_sfl.push_back(cluster_i);
 			flag.at(cluster_i) = true;
@@ -1853,11 +1889,11 @@ template<typename D> double Layer<D>::compute_log_self_link_lik_sfl()
 	compute_marg_liks_sfl();
 	if (parent)
 	{
-		log_self_link_lik_sfl = parent->compute_log_self_link_lik_sfl();//ÊÇÒ»¸öµİ¹é£¬Ö±µ½Ëã³ölog_self_link_likµÄÖµ£¬²¢¸üĞÂqq_temp
+		log_self_link_lik_sfl = parent->compute_log_self_link_lik_sfl();//ÃŠÃ‡Ã’Â»Å¾Ã¶ÂµÃÂ¹Ã©Â£Â¬Ã–Â±ÂµÅ“Ã‹Ã£Â³Ã¶log_self_link_likÂµÃ„Ã–ÂµÂ£Â¬Â²Â¢Å¾Ã¼ÃÃ‚qq_temp
 	}
 	else
 	{
-		base.reset_class(qq_temp);//ÖØÖÃÎªÁã
+		base.reset_class(qq_temp);//Ã–Ã˜Ã–ÃƒÃÂªÃÃ£
 		log_self_link_lik_sfl = base.marg_likelihood(qq_temp, *it_stat_cur_sfl);
 	}
 	double child_self_link_lik_sfl = 0.0;
@@ -1900,7 +1936,7 @@ template<typename D> void Layer<D>::compute_log_probs_sampling_sfl()
 	vector<double>::iterator it_log_p = log_item_priors_cur_sfl.begin();
 	double log_prob_i;
 	for (; it_c != cls_cands_cur_sfl.end(); it_c++, it_log_p++) 
-	{//ÕâÀïÓÃµ½µÄ²»ÊÇuni_cls_cands_cur
+	{//Ã•Ã¢Ã€Ã¯Ã“ÃƒÂµÅ“ÂµÃ„Â²Â»ÃŠÃ‡uni_cls_cands_cur
 		log_prob_i = (*it_log_p) + log_pred_liks_sfl.at(*it_c);
 		log_probs_sampling_sfl.push_back(log_prob_i);
 		if (log_prob_i > max_log_prob_sfl)
@@ -1930,7 +1966,7 @@ template<typename D> void Layer<D>::sample_customer_sfl()
 	}
 	log_probs_sampling_sfl.push_back(sum);
 
-	int idx_ci = rand_mult_1(log_probs_sampling_sfl);//²úÉúÒ»¸öËæ»úµÄÎ»ÖÃ
+	int idx_ci = rand_mult_1(log_probs_sampling_sfl);//Â²ÃºÃ‰ÃºÃ’Â»Å¾Ã¶Ã‹Ã¦Â»ÃºÂµÃ„ÃÂ»Ã–Ãƒ
 	new_customer_cur_sfl = item_cands_cur_sfl.at(idx_ci);
 }
 template<typename D> inline void Layer<D>::change_table_sfl(int _new_table)
@@ -1969,7 +2005,7 @@ template<typename D> void Layer<D>::add_table_sfl()
 
 template<typename D> void Layer<D>::sample_new_customer_sfl()
 {
-	sample_customer_sfl();//ÕâÀïÃæÓÃµÄlog_ÖµÒªÈ¡×Ô±¾²ãµÄºóÑé¼ÆËã£¬ÔÚ¼ÆËãlog_self_lin_likµÄÊ±ºòËã¹ı£¬ÓÉÓÚÊÇÕë¶Ô²»Í¬²ãµÄ¼ÆËã£¬ËùÒÔ²»»á±»¸ü¸Ä
+	sample_customer_sfl();//Ã•Ã¢Ã€Ã¯ÃƒÃ¦Ã“ÃƒÂµÃ„log_Ã–ÂµÃ’ÂªÃˆÂ¡Ã—Ã”Â±Å¸Â²Ã£ÂµÃ„ÂºÃ³Ã‘Ã©Å’Ã†Ã‹Ã£Â£Â¬Ã”ÃšÅ’Ã†Ã‹Ã£log_self_lin_likÂµÃ„ÃŠÂ±ÂºÃ²Ã‹Ã£Â¹Ã½Â£Â¬Ã“Ã‰Ã“ÃšÃŠÃ‡Ã•Ã«Â¶Ã”Â²Â»ÃÂ¬Â²Ã£ÂµÃ„Å’Ã†Ã‹Ã£Â£Â¬Ã‹Ã¹Ã’Ã”Â²Â»Â»Ã¡Â±Â»Å¾Ã¼Å¾Ã„
 	customers.at(cur_link) = new_customer_cur_sfl;
 	if (new_customer_cur_sfl != cur_link)
 	{
@@ -1980,7 +2016,7 @@ template<typename D> void Layer<D>::sample_new_customer_sfl()
 	}
 	else
 	{
-		new_table_cur_sfl = cur_link;//customerÉÏÃæÒÑ¾­¸³ÖµÁË
+		new_table_cur_sfl = cur_link;//customerÃ‰ÃÃƒÃ¦Ã’Ã‘Å¸Â­Å¾Â³Ã–ÂµÃÃ‹
 		tables.at(cur_link) = cur_link;
 		idx_group_cur_sfl = inds_groups.at(cur_link);
 		add_table_sfl();
@@ -1999,15 +2035,15 @@ template<typename D> void Layer<D>::sample_new_customer_sfl()
 template<typename D> void Layer<D>::sample_for_single_sfl()
 {
 	cout << "cur_link"<<cur_link << endl;
-	idx_group_cur_sfl= inds_groups.at(cur_link);//µ±Ç°½ÚµãËùÔÚµÄÍÅ´Ø±êºÅ
+	idx_group_cur_sfl= inds_groups.at(cur_link);//ÂµÂ±Ã‡Â°Å“ÃšÂµÃ£Ã‹Ã¹Ã”ÃšÂµÃ„ÃÃ…Å½Ã˜Â±ÃªÂºÃ…
 	get_candidates_sfl();
 	//if (item_cands_cur_sfl.size() == 1)
-	//{//Èç¹ûÖ»ÓĞ×Ô¼º¾ÍÍË³öÑ­»·ÁË,ÕâÀïÇø±ğÓÚ¶ÔitemµÄ²ÉÑù£¬Èç¹ûÖ»ÓĞ×Ô¼ºÒ²¾ÍÖ»ÄÜÊÇ×ÔÁ¬½ÓµÄÇé¿öÁË,ÕâÖÖÇé¿öÔÚÏÂÃæÓĞ¿¼ÂÇ
-	//	//ÕâÖÖÇé¿öÏÂÃæÓĞ¿¼ÂÇ£¬ËùÒÔ²»±Øµ¥¶ÀÁĞ³öÀ´
+	//{//ÃˆÃ§Â¹Ã»Ã–Â»Ã“ÃÃ—Ã”Å’ÂºÅ¸ÃÃÃ‹Â³Ã¶Ã‘Â­Â»Â·ÃÃ‹,Ã•Ã¢Ã€Ã¯Ã‡Ã¸Â±Ã°Ã“ÃšÂ¶Ã”itemÂµÃ„Â²Ã‰Ã‘Ã¹Â£Â¬ÃˆÃ§Â¹Ã»Ã–Â»Ã“ÃÃ—Ã”Å’ÂºÃ’Â²Å¸ÃÃ–Â»Ã„ÃœÃŠÃ‡Ã—Ã”ÃÂ¬Å“Ã“ÂµÃ„Ã‡Ã©Â¿Ã¶ÃÃ‹,Ã•Ã¢Ã–Ã–Ã‡Ã©Â¿Ã¶Ã”ÃšÃÃ‚ÃƒÃ¦Ã“ÃÂ¿Å’Ã‚Ã‡
+	//	//Ã•Ã¢Ã–Ã–Ã‡Ã©Â¿Ã¶ÃÃ‚ÃƒÃ¦Ã“ÃÂ¿Å’Ã‚Ã‡Â£Â¬Ã‹Ã¹Ã’Ã”Â²Â»Â±Ã˜ÂµÂ¥Â¶Ã€ÃÃÂ³Ã¶Ã€Å½
 	//	cout << "zi ji " << endl;
 	//	int iil;
 	//	cin >> iil;
-	//	collect_connections_sfl();//ÊÕ¼¯ËùÓĞµÄ×ÓÊ÷
+	//	collect_connections_sfl();//ÃŠÃ•Å’Â¯Ã‹Ã¹Ã“ÃÂµÃ„Ã—Ã“ÃŠÃ·
 
 	//	new_customer_cur_sfl = cur_link;
 	//	new_table_cur_sfl = cur_link;
@@ -2025,14 +2061,14 @@ template<typename D> void Layer<D>::sample_for_single_sfl()
 	//	}
 	//	return;
 	//}
-	collect_clusters_sfl();//uni_cls_cands_cur,´æ´¢ÁËÕâĞ©ºòÑ¡Á´½ÓµÄ¶¥²ãÍÅ
-	collect_connections_sfl();//ÊÕ¼¯ËùÓĞµÄ×ÓÊ÷
-	//old_cls_cur_sfl = get_cluster_sfl(cur_item);//Ö»ÊÇµÃµ½×Ô¼ºµÄÍÅ´Ø±êºÅ
-	////ÒÑ¾­¼û¹ıÒ»»ØÀ´²»ÄÜÔÙ¼õÁË
-	//base.del_data(*pos_classqq.at(old_cls_cur_sfl), *it_stat_cur_sfl);//°ÑÕû¸öÍÅ´ØÖĞÓëcur_itemÏàÁ¬µÄword µÄÍ³¼ÆÖµÉ¾µô
+	collect_clusters_sfl();//uni_cls_cands_cur,Å½Ã¦Å½Â¢ÃÃ‹Ã•Ã¢ÃÂ©ÂºÃ²Ã‘Â¡ÃÅ½Å“Ã“ÂµÃ„Â¶Â¥Â²Ã£ÃÃ…
+	collect_connections_sfl();//ÃŠÃ•Å’Â¯Ã‹Ã¹Ã“ÃÂµÃ„Ã—Ã“ÃŠÃ·
+	//old_cls_cur_sfl = get_cluster_sfl(cur_item);//Ã–Â»ÃŠÃ‡ÂµÃƒÂµÅ“Ã—Ã”Å’ÂºÂµÃ„ÃÃ…Å½Ã˜Â±ÃªÂºÃ…
+	////Ã’Ã‘Å¸Â­Å’Ã»Â¹Ã½Ã’Â»Â»Ã˜Ã€Å½Â²Â»Ã„ÃœÃ”Ã™Å’ÃµÃÃ‹
+	//base.del_data(*pos_classqq.at(old_cls_cur_sfl), *it_stat_cur_sfl);//Â°Ã‘Ã•Ã»Å¾Ã¶ÃÃ…Å½Ã˜Ã–ÃÃ“Ã«cur_itemÃÃ ÃÂ¬ÂµÃ„word ÂµÃ„ÃÂ³Å’Ã†Ã–ÂµÃ‰Å¸ÂµÃ´
 	is_computed_sfl.clear();
 	is_computed_sfl.assign(trainss.size(), false);
-	compute_marg_liks_sfl();//¼ÆËãÍÅ´Øuni_cls_cands_curµÄËÆÈ»ÖµÈ»ºó´æ´¢ÔÚpred_links.at(c)ÖĞ,(ÒòÎª¼ôµôÒ»Ğ©Ö®ºó»áÓĞ¸Ä±ä)
+	compute_marg_liks_sfl();//Å’Ã†Ã‹Ã£ÃÃ…Å½Ã˜uni_cls_cands_curÂµÃ„Ã‹Ã†ÃˆÂ»Ã–ÂµÃˆÂ»ÂºÃ³Å½Ã¦Å½Â¢Ã”Ãšpred_links.at(c)Ã–Ã,(Ã’Ã²ÃÂªÅ’Ã´ÂµÃ´Ã’Â»ÃÂ©Ã–Â®ÂºÃ³Â»Ã¡Ã“ÃÅ¾Ã„Â±Ã¤)
 	if (parent)
 	{
 		log_self_link_lik_sfl = parent->compute_log_self_link_lik_sfl();
@@ -2042,9 +2078,9 @@ template<typename D> void Layer<D>::sample_for_single_sfl()
 		base.reset_class(qq_temp);
 		log_self_link_lik_sfl = base.marg_likelihood(qq_temp, *it_stat_cur_sfl);
 	}
-	compute_log_probs_sampling_sfl();//ÕâÀïÑ°ÕÒ×î´óµÄ´æÔÚmax_log_prob
+	compute_log_probs_sampling_sfl();//Ã•Ã¢Ã€Ã¯Ã‘Â°Ã•Ã’Ã—Ã®Å½Ã³ÂµÃ„Å½Ã¦Ã”Ãšmax_log_prob
 	sample_customer_sfl();
-	if (new_customer_cur_sfl == cur_link)//Èç¹ûĞÂ²ÉÑùµÄÁ´½Ó×Ô³ÉÒ»×À
+	if (new_customer_cur_sfl == cur_link)//ÃˆÃ§Â¹Ã»ÃÃ‚Â²Ã‰Ã‘Ã¹ÂµÃ„ÃÅ½Å“Ã“Ã—Ã”Â³Ã‰Ã’Â»Ã—Ã€
 	{
 		new_table_cur_sfl = new_customer_cur_sfl;
 		update_link_sfl();
@@ -2077,7 +2113,7 @@ template<typename D> void Layer<D>::run_sampler_sfl()
 	vector<int> &links_cur = links.at(cur_item);
 	for (vector<int>::iterator it = links_cur.begin(); it != links_cur.end(); it++)
 	{
-		cur_link = *it;//²»ÄÜÈÃitem µÄ²ÉÑùºÍlinkµÄ²ÉÑù»ìÔÚÒ»Æğ£¬ÕâÑù»áÌø¹ıºÜ¶àitemµÄ²ÉÑù
+		cur_link = *it;//Â²Â»Ã„ÃœÃˆÃƒitem ÂµÃ„Â²Ã‰Ã‘Ã¹ÂºÃlinkÂµÃ„Â²Ã‰Ã‘Ã¹Â»Ã¬Ã”ÃšÃ’Â»Ã†Ã°Â£Â¬Ã•Ã¢Ã‘Ã¹Â»Ã¡ÃŒÃ¸Â¹Ã½ÂºÃœÂ¶Ã itemÂµÃ„Â²Ã‰Ã‘Ã¹
 		sample_for_single_sfl();
 		//customers.at(*it) = _new_customer;
 	}
@@ -2085,30 +2121,30 @@ template<typename D> void Layer<D>::run_sampler_sfl()
 }
 
 template<typename D> void Layer<D>::traverse_single_table(int idx_table)
-{//ÊäÈëÊÇ²Í×ÀµÄ±êºÅ£¬¶Ô²Í×ÀµÄÊ÷¼°Æä×ÓÊ÷½øĞĞÊáÀí´æ´¢ÔÚtree.at(idx_table)£¬²¢Í³¼ÆÆä¹Û²âÖµ´æÔÚÏàÓ¦µÄstatsÖĞ£¬
+{//ÃŠÃ¤ÃˆÃ«ÃŠÃ‡Â²ÃÃ—Ã€ÂµÃ„Â±ÃªÂºÃ…Â£Â¬Â¶Ã”Â²ÃÃ—Ã€ÂµÃ„ÃŠÃ·Å’Â°Ã†Ã¤Ã—Ã“ÃŠÃ·Å“Ã¸ÃÃÃŠÃ¡Ã€Ã­Å½Ã¦Å½Â¢Ã”Ãštree.at(idx_table)Â£Â¬Â²Â¢ÃÂ³Å’Ã†Ã†Ã¤Â¹Ã›Â²Ã¢Ã–ÂµÅ½Ã¦Ã”ÃšÃÃ Ã“Å ÂµÃ„statsÃ–ÃÂ£Â¬
 	vector<int>& tree_i = trees.at(idx_table);//
 	vector<int>& order_i = orders.at(idx_table);
 	vector<STAT>& stat_i = stats.at(idx_table);
 	vector<int> to_visit, to_visit_father, father_i;
 	int cnt = 0;
-	tree_i.push_back(idx_table);//ÆğÊ¼ÔªËØÊÇÕâ¸ö²Í×ÀµÄ±êºÅµã
-	father_i.push_back(-1);//¸ù½Úµã´¦±ê¼ÇÎª-1 Ó¦¸ÃÊÇÃ»ÓĞ¸¸½ÚµãµÄÒâË¼
+	tree_i.push_back(idx_table);//Ã†Ã°ÃŠÅ’Ã”ÂªÃ‹Ã˜ÃŠÃ‡Ã•Ã¢Å¾Ã¶Â²ÃÃ—Ã€ÂµÃ„Â±ÃªÂºÃ…ÂµÃ£
+	father_i.push_back(-1);//Å¾Ã¹Å“ÃšÂµÃ£Å½Å Â±ÃªÅ’Ã‡ÃÂª-1 Ã“Å Å¾ÃƒÃŠÃ‡ÃƒÂ»Ã“ÃÅ¾Å¾Å“ÃšÂµÃ£ÂµÃ„Ã’Ã¢Ã‹Å’
 	stat_i.push_back(STAT());
-	inds_start.at(idx_table) = cnt++;//Îª¸ù½Úµã´¦µÄ×´Ì¬¼Ğ1
-	vector<int>& links_t = links.at(idx_table);//ÔÚÒ»¸ö²Í×À±êºÅ´¦µÄlinkÖµ
+	inds_start.at(idx_table) = cnt++;//ÃÂªÅ¾Ã¹Å“ÃšÂµÃ£Å½Å ÂµÃ„Ã—Å½ÃŒÂ¬Å’Ã1
+	vector<int>& links_t = links.at(idx_table);//Ã”ÃšÃ’Â»Å¾Ã¶Â²ÃÃ—Ã€Â±ÃªÂºÃ…Å½Å ÂµÃ„linkÃ–Âµ
 	vector<int>::iterator p = links_t.begin();
-	if (p != links_t.end())//ÕâÀï²¢·ÇÑ­»·Ö»ÊÇÅĞ¶ÏÊÇ·ñÎª¿Õ
+	if (p != links_t.end())//Ã•Ã¢Ã€Ã¯Â²Â¢Â·Ã‡Ã‘Â­Â»Â·Ã–Â»ÃŠÃ‡Ã…ÃÂ¶ÃÃŠÃ‡Â·Ã±ÃÂªÂ¿Ã•
 	{
-		to_visit.push_back(*p);//to_visit ×°ÌîµÄÊÇÏÂÒ»¸öÒª·ÃÎÊµÄÎ»ÖÃ
-		to_visit_father.push_back(idx_table);//×°ÌîµÄÊÇ±¾´ÎËùÔÚµÄ½Úµã
+		to_visit.push_back(*p);//to_visit Ã—Â°ÃŒÃ®ÂµÃ„ÃŠÃ‡ÃÃ‚Ã’Â»Å¾Ã¶Ã’ÂªÂ·ÃƒÃÃŠÂµÃ„ÃÂ»Ã–Ãƒ
+		to_visit_father.push_back(idx_table);//Ã—Â°ÃŒÃ®ÂµÃ„ÃŠÃ‡Â±Å¸Å½ÃÃ‹Ã¹Ã”ÃšÂµÃ„Å“ÃšÂµÃ£
 		p++;
 	}
 	else
-	{//Èç¹ûÕâ¸ö²Í×ÀµÄlinkÖµÊÇ¿ÕµÄ 
+	{//ÃˆÃ§Â¹Ã»Ã•Ã¢Å¾Ã¶Â²ÃÃ—Ã€ÂµÃ„linkÃ–ÂµÃŠÃ‡Â¿Ã•ÂµÃ„ 
 		inds_end.at(idx_table) = 0;
-		child ?//child Îªtrue¼ÆËãexpr1£»Îªfalse¼ÆËãexpr2
-			(stat_i.front() = child->stats.at(idx_table).front()) : //Èç¹ûÓĞ×Ó½Úµã
-			(stat_i.front().init(trainss.at(idx_table), base.get_eta()));//Èç¹ûÊÇ×îµ×²ã,³õÊ¼»¯idx_tableÄÇÒ»µãµÄuni_ss£»uni_qq;µÄÖµ
+		child ?//child ÃÂªtrueÅ’Ã†Ã‹Ã£expr1Â£Â»ÃÂªfalseÅ’Ã†Ã‹Ã£expr2
+			(stat_i.front() = child->stats.at(idx_table).front()) : //ÃˆÃ§Â¹Ã»Ã“ÃÃ—Ã“Å“ÃšÂµÃ£
+			(stat_i.front().init(trainss.at(idx_table), base.get_eta()));//ÃˆÃ§Â¹Ã»ÃŠÃ‡Ã—Ã®ÂµÃ—Â²Ã£,Â³ÃµÃŠÅ’Â»Â¯idx_tableÃ„Ã‡Ã’Â»ÂµÃ£ÂµÃ„uni_ssÂ£Â»uni_qq;ÂµÃ„Ã–Âµ
 
 		order_i.push_back(0);
 		return;
@@ -2116,22 +2152,22 @@ template<typename D> void Layer<D>::traverse_single_table(int idx_table)
 
 	for (; p != links_t.end(); p++)
 	{
-		to_visit.push_back(*p);//Ö¸ÏòÏÂÒ»¸öÖµ
-		to_visit_father.push_back(-1);//¸¸½ÚµãÒÑ¾­±£´æ¹ıÁË£¬ÕâÀï¶¼±ê¼Ç³É-1
+		to_visit.push_back(*p);//Ã–Å¾ÃÃ²ÃÃ‚Ã’Â»Å¾Ã¶Ã–Âµ
+		to_visit_father.push_back(-1);//Å¾Å¾Å“ÃšÂµÃ£Ã’Ã‘Å¸Â­Â±Â£Å½Ã¦Â¹Ã½ÃÃ‹Â£Â¬Ã•Ã¢Ã€Ã¯Â¶Å’Â±ÃªÅ’Ã‡Â³Ã‰-1
 	}
 	int curr;
-	while (!to_visit.empty())//Èç¹û¾­¹ıÉÏÃæµÄÕÛÌÚÖ®ºóto_visit²»ÊÇ¿ÕµÄ£¬Ôò£¿£¿
+	while (!to_visit.empty())//ÃˆÃ§Â¹Ã»Å¸Â­Â¹Ã½Ã‰ÃÃƒÃ¦ÂµÃ„Ã•Ã›ÃŒÃšÃ–Â®ÂºÃ³to_visitÂ²Â»ÃŠÃ‡Â¿Ã•ÂµÃ„Â£Â¬Ã”Ã²Â£Â¿Â£Â¿
 	{
-		curr = to_visit.back();//´Ó×îºóÒ»¸ö¿ªÊ¼
-		inds_start.at(curr) = cnt++;//Õâ¸öcntÊÇ¸ú×ÅÉÏÃæµÄÀ´µÄ
+		curr = to_visit.back();//Å½Ã“Ã—Ã®ÂºÃ³Ã’Â»Å¾Ã¶Â¿ÂªÃŠÅ’
+		inds_start.at(curr) = cnt++;//Ã•Ã¢Å¾Ã¶cntÃŠÃ‡Å¾ÃºÃ—Ã…Ã‰ÃÃƒÃ¦ÂµÃ„Ã€Å½ÂµÃ„
 		tree_i.push_back(curr);
 		stat_i.push_back(STAT());
 		father_i.push_back(to_visit_father.back());
 		to_visit.pop_back();
-		to_visit_father.pop_back();//°ÑtovisitºÍtovisitfaterµÄÖµ¸øtree_i ,father_iÖ®ºóÊÍ·Å
+		to_visit_father.pop_back();//Â°Ã‘tovisitÂºÃtovisitfaterÂµÃ„Ã–ÂµÅ¾Ã¸tree_i ,father_iÃ–Â®ÂºÃ³ÃŠÃÂ·Ã…
 		vector<int> & links_curr = links.at(curr);
 		if (!links_curr.empty())
-		{//Èç¹ûÔÚcurrµãµÄlink²»ÊÇ¿ÕµÄ
+		{//ÃˆÃ§Â¹Ã»Ã”ÃšcurrÂµÃ£ÂµÃ„linkÂ²Â»ÃŠÃ‡Â¿Ã•ÂµÃ„
 			p = links_curr.begin();
 			to_visit.push_back(*p);
 			to_visit_father.push_back(curr);
@@ -2142,29 +2178,29 @@ template<typename D> void Layer<D>::traverse_single_table(int idx_table)
 			}
 		}
 		else
-		{//Èç¹û¸ÃµãµÄlinksÊÇ¿ÕµÄ
+		{//ÃˆÃ§Â¹Ã»Å¾ÃƒÂµÃ£ÂµÃ„linksÃŠÃ‡Â¿Ã•ÂµÃ„
 			inds_end.at(curr) = inds_start.at(curr);
 
 			child ?
 				(stat_i.at(inds_start.at(curr)).init(child->stats.at(curr).front(), base.get_eta())) :
 				stat_i.at(inds_start.at(curr)).init(trainss.at(curr), base.get_eta());
-			order_i.push_back(inds_start.at(curr));//±íÃ÷ÁËÕâ¸ö
+			order_i.push_back(inds_start.at(curr));//Â±Ã­ÃƒÃ·ÃÃ‹Ã•Ã¢Å¾Ã¶
 
 			int f = father_i.at(inds_start.at(curr));
-			while (f >= 0)//ÓĞ´óÓÚ0±íÊ¾Æä×Ó½ÚµãÒÑ¾­ËãÍêÁË
+			while (f >= 0)//Ã“ÃÅ½Ã³Ã“Ãš0Â±Ã­ÃŠÅ¸Ã†Ã¤Ã—Ã“Å“ÃšÂµÃ£Ã’Ã‘Å¸Â­Ã‹Ã£ÃÃªÃÃ‹
 			{
-				inds_end.at(f) = inds_end.at(curr);//ÄÇÃ´¸Ã½ÚµãËù°üº¬µÄ×Ó½Úµã¾ÍÓ¦¸Ãµ½Õâ¸öÎ»ÖÃ½áÊøÁË
+				inds_end.at(f) = inds_end.at(curr);//Ã„Ã‡ÃƒÅ½Å¾ÃƒÅ“ÃšÂµÃ£Ã‹Ã¹Â°Ã¼ÂºÂ¬ÂµÃ„Ã—Ã“Å“ÃšÂµÃ£Å¸ÃÃ“Å Å¾ÃƒÂµÅ“Ã•Ã¢Å¾Ã¶ÃÂ»Ã–ÃƒÅ“Ã¡ÃŠÃ¸ÃÃ‹
 				child ?
 					(stat_i.at(inds_start.at(f)).init(child->stats.at(f).front(), base.get_eta())) :
 					stat_i.at(inds_start.at(f)).init(trainss.at(f), base.get_eta());
 				order_i.push_back(inds_start.at(f));
 				for (p = links.at(f).begin(); p != links.at(f).end(); p++)
 				{
-					stat_i.at(inds_start.at(f)).update(stat_i.at(inds_start.at(*p)));//¸Ä±äÁËstatÖĞµÄindsµÄÖµ
+					stat_i.at(inds_start.at(f)).update(stat_i.at(inds_start.at(*p)));//Å¾Ã„Â±Ã¤ÃÃ‹statÃ–ÃÂµÃ„indsÂµÃ„Ã–Âµ
 					stat_i.at(inds_start.at(*p)).clear_inds();
 
 				}
-				f = father_i.at(inds_start.at(f));//¼ÌĞøÏòÉÏ»ØËİ
+				f = father_i.at(inds_start.at(f));//Å’ÃŒÃÃ¸ÃÃ²Ã‰ÃÂ»Ã˜Ã‹Ã
 			}
 		}
 	}
@@ -2183,25 +2219,25 @@ template<typename D> void Layer<D>::traverse_links()
 	}
 	links.assign(trainss.size(), vector<int>());
 	if (child)
-	{///µÚ1.2²ãÊ¹ÓÃ
-		for (auto it = child->uni_tables_vec.begin(); it != child->uni_tables_vec.end(); it++)//ÓÃµÄÊÇchildµÄÊı¾İ¸üĞÂ±¾²ãÊı¾İ
+	{///ÂµÃš1.2Â²Ã£ÃŠÂ¹Ã“Ãƒ
+		for (auto it = child->uni_tables_vec.begin(); it != child->uni_tables_vec.end(); it++)//Ã“ÃƒÂµÃ„ÃŠÃ‡childÂµÃ„ÃŠÃ½Å¸ÃÅ¾Ã¼ÃÃ‚Â±Å¸Â²Ã£ÃŠÃ½Å¸Ã
 		{
-			int cst = customers.at(*it);//Õâ¸öcustomer.at(*it)ÊÇ±¾²ãÔÚ*itÎ»ÖÃµÄ¹Ë¿ÍÓëË­ÏàÁ¬
-			if (cst != *it)//Èç¹û²»ÊÇ×ÔÁ¬½Ó
+			int cst = customers.at(*it);//Ã•Ã¢Å¾Ã¶customer.at(*it)ÃŠÃ‡Â±Å¸Â²Ã£Ã”Ãš*itÃÂ»Ã–ÃƒÂµÃ„Â¹Ã‹Â¿ÃÃ“Ã«Ã‹Â­ÃÃ ÃÂ¬
+			if (cst != *it)//ÃˆÃ§Â¹Ã»Â²Â»ÃŠÃ‡Ã—Ã”ÃÂ¬Å“Ã“
 			{
-				links.at(cst).push_back(*it);//°Ñ¸Ã¹Ë¿Í£¨*it£©·ÅÈë¹Ë¿ÍÁ´½ÓÖ¸ÏòµÄ½Úµã£¨cst£©µÄlinkÁĞ±íÖĞ
+				links.at(cst).push_back(*it);//Â°Ã‘Å¾ÃƒÂ¹Ã‹Â¿ÃÂ£Å¡*itÂ£Â©Â·Ã…ÃˆÃ«Â¹Ã‹Â¿ÃÃÅ½Å“Ã“Ã–Å¾ÃÃ²ÂµÃ„Å“ÃšÂµÃ£Â£Å¡cstÂ£Â©ÂµÃ„linkÃÃÂ±Ã­Ã–Ã
 			}
 		}
 	}
 	else
-	{//µÚ0²ãÊ¹ÓÃ
+	{//ÂµÃš0Â²Ã£ÃŠÂ¹Ã“Ãƒ
 		int i = 0;
 		for (auto it = customers.begin(); it != customers.end(); it++, i++)
 		{
 
 			if (*it != i)
 			{
-				links.at(*it).push_back(i);//*itÊÇ¹Ë¿ÍiËùÖ¸ÏòµÄÖµ£¬±éÀúËùÓĞ¹Ë¿ÍÖ¸ÏòÖ®ºó¾ÍµÃµ½ÁË£¬ËùÓĞÖ¸Ïò¹Ë¿Í*itµÄ¹Ë¿Íi×é³ÉµÄÏòÁ¿
+				links.at(*it).push_back(i);//*itÃŠÃ‡Â¹Ã‹Â¿ÃiÃ‹Ã¹Ã–Å¾ÃÃ²ÂµÃ„Ã–ÂµÂ£Â¬Â±Ã©Ã€ÃºÃ‹Ã¹Ã“ÃÂ¹Ã‹Â¿ÃÃ–Å¾ÃÃ²Ã–Â®ÂºÃ³Å¸ÃÂµÃƒÂµÅ“ÃÃ‹Â£Â¬Ã‹Ã¹Ã“ÃÃ–Å¾ÃÃ²Â¹Ã‹Â¿Ã*itÂµÃ„Â¹Ã‹Â¿ÃiÃ—Ã©Â³Ã‰ÂµÃ„ÃÃ²ÃÂ¿
 			}
 
 		}
@@ -2230,9 +2266,9 @@ template<typename D> void Layer<D>::traverse_links()
 #ifdef TRI_MULT_DIST
 
 template<typename D> int Layer<D>::sample_ss(vector<int>& qq, vector<double>& eta, int w)
-{//ÕâÀïÒÔ¼õµôµ±Ç°ÖµµÄqq×÷ÎªËÆÈ»£¬È»ºó½øĞĞ²ÉÑùµÃµ½ĞÂµÄ²ÉÑùÖµ
-	qq.at(w)--;//¶ÔÓ¦µÄÍ³¼ÆÁ¿¼õµôÒ»¸ö
-	qq.back()--;//¶ÔÓ¦µÄ¸öÊı¼õÒ»¸ö
+{//Ã•Ã¢Ã€Ã¯Ã’Ã”Å’ÃµÂµÃ´ÂµÂ±Ã‡Â°Ã–ÂµÂµÃ„qqÃ—Ã·ÃÂªÃ‹Ã†ÃˆÂ»Â£Â¬ÃˆÂ»ÂºÃ³Å“Ã¸ÃÃÂ²Ã‰Ã‘Ã¹ÂµÃƒÂµÅ“ÃÃ‚ÂµÃ„Â²Ã‰Ã‘Ã¹Ã–Âµ
+	qq.at(w)--;//Â¶Ã”Ã“Å ÂµÃ„ÃÂ³Å’Ã†ÃÂ¿Å’ÃµÂµÃ´Ã’Â»Å¾Ã¶
+	qq.back()--;//Â¶Ã”Ã“Å ÂµÃ„Å¾Ã¶ÃŠÃ½Å’ÃµÃ’Â»Å¾Ã¶
 	vector<double> weights = eta;
 	for (int i = 0; i != weights.size(); i++)
 	{
@@ -2247,17 +2283,17 @@ template<typename D> int Layer<D>::sample_ss(vector<int>& qq, vector<double>& et
 template<typename D> void Layer<D>::sample_source_sink_c(int t, int c)
 {
 	if (child)
-	{//Èç¹û²»ÊÇµ×²ã
+	{//ÃˆÃ§Â¹Ã»Â²Â»ÃŠÃ‡ÂµÃ—Â²Ã£
 		for (auto it = trees.at(t).begin(); it != trees.at(t).end(); it++)
-		{//¶Ô¸Ã²Í×Àt¶ÔÓ¦µÄÊ÷ÖĞµÄÃ¿Ò»¹Ë¿Í,Ò²¼´ÏÂÒ»²ãµÄ²Í×À½øĞĞsample£¬ÕâÀïµÄc´ú±í×îÍâ²ãµÄÀà±ğ±êºÅ
+		{//Â¶Ã”Å¾ÃƒÂ²ÃÃ—Ã€tÂ¶Ã”Ã“Å ÂµÃ„ÃŠÃ·Ã–ÃÂµÃ„ÃƒÂ¿Ã’Â»Â¹Ã‹Â¿Ã,Ã’Â²Å’Å½ÃÃ‚Ã’Â»Â²Ã£ÂµÃ„Â²ÃÃ—Ã€Å“Ã¸ÃÃsampleÂ£Â¬Ã•Ã¢Ã€Ã¯ÂµÃ„cÅ½ÃºÂ±Ã­Ã—Ã®ÃÃ¢Â²Ã£ÂµÃ„Ã€Ã Â±Ã°Â±ÃªÂºÃ…
 			child->sample_source_sink_c(*it, c);
 		}
 	}
 	else
-	{//×·Ëİµ½µ×²ãµÄÃ¿¸ö²Í×Àt,¾ÛÀà±êºÅc
+	{//Ã—Â·Ã‹ÃÂµÅ“ÂµÃ—Â²Ã£ÂµÃ„ÃƒÂ¿Å¾Ã¶Â²ÃÃ—Ã€t,Å¸Ã›Ã€Ã Â±ÃªÂºÃ…c
 		QQ& qq = *pos_classqq.at(c);
 		for (auto it = trees.at(t).begin(); it != trees.at(t).end(); it++)
-		{//Ê÷ÖĞµÄÃ¿Ò»¸ö½Úµãss,Èç¹û²»ÊÇ¹Û²âÖµ¾ÍÒª½øĞĞÖØĞÂ²ÉÑù
+		{//ÃŠÃ·Ã–ÃÂµÃ„ÃƒÂ¿Ã’Â»Å¾Ã¶Å“ÃšÂµÃ£ss,ÃˆÃ§Â¹Ã»Â²Â»ÃŠÃ‡Â¹Ã›Â²Ã¢Ã–ÂµÅ¸ÃÃ’ÂªÅ“Ã¸ÃÃÃ–Ã˜ÃÃ‚Â²Ã‰Ã‘Ã¹
 			SS& ss = trainss.at(*it);
 
 			if (ss.gibbs_source)
@@ -2280,7 +2316,7 @@ template<typename D> void Layer<D>::sample_source_sink()
 	{
 		//#pragma omp for
 		//for ()
-		//¶ÔÃ¿Ò»¸ö×î¶¥²ãµÄ²Í×À½øĞĞ²ÉÑù£¬c´ú±í²Í×À±êºÅ
+		//Â¶Ã”ÃƒÂ¿Ã’Â»Å¾Ã¶Ã—Ã®Â¶Â¥Â²Ã£ÂµÃ„Â²ÃÃ—Ã€Å“Ã¸ÃÃÂ²Ã‰Ã‘Ã¹Â£Â¬cÅ½ÃºÂ±Ã­Â²ÃÃ—Ã€Â±ÃªÂºÃ…
 		for_each(top->uni_tables_vec.begin(), top->uni_tables_vec.end(), [](int c){ top->sample_source_sink_c(c, c); });
 	}
 }
@@ -2321,23 +2357,23 @@ template<typename D> void Layer<D>::update_ss_stats()
 template<typename D> void Layer<D>::label_instances()
 {
 	for (int i = 0; i != bottom->num_groups; i++)
-	{//¶ÔÓÚµ×²ãµÄÃ¿¸ö²Í¹İ£¬Ò²¾ÍÊÇÃ¿Ò»Ìõ¹ì¼£
+	{//Â¶Ã”Ã“ÃšÂµÃ—Â²Ã£ÂµÃ„ÃƒÂ¿Å¾Ã¶Â²ÃÂ¹ÃÂ£Â¬Ã’Â²Å¸ÃÃŠÃ‡ÃƒÂ¿Ã’Â»ÃŒÃµÂ¹Ã¬Å’Â£
 		vector<int> topics;
 		vector<int> topic_stat;
 		vector<int> pos(trainss.size(), -1);
 		vector<int> &inds_items_i = bottom->inds_items.at(i);
 		for (int j = 0; j != inds_items_i.size(); j++)
-		{//¶ÔÓÚÃ¿¸ö½Úµã£¬¼´¹ì¼£Æ¬¶Î
-			int c = bottom->get_cluster(inds_items_i.at(j));//Àà±ğ±êÇ©
+		{//Â¶Ã”Ã“ÃšÃƒÂ¿Å¾Ã¶Å“ÃšÂµÃ£Â£Â¬Å’Å½Â¹Ã¬Å’Â£Ã†Â¬Â¶Ã
+			int c = bottom->get_cluster(inds_items_i.at(j));//Ã€Ã Â±Ã°Â±ÃªÃ‡Â©
 			if (pos.at(c) < 0)
-			{//Èç¹ûÕâ¸öÀà±ğ±êÇ©ÊÇµÚÒ»´Î³öÏÖ£¬ÔÚ¸ÃÎ»ÖÃĞ´½øĞÂµÄÖ÷Ìâ±êºÅ
+			{//ÃˆÃ§Â¹Ã»Ã•Ã¢Å¾Ã¶Ã€Ã Â±Ã°Â±ÃªÃ‡Â©ÃŠÃ‡ÂµÃšÃ’Â»Å½ÃÂ³Ã¶ÃÃ–Â£Â¬Ã”ÃšÅ¾ÃƒÃÂ»Ã–ÃƒÃÅ½Å“Ã¸ÃÃ‚ÂµÃ„Ã–Ã·ÃŒÃ¢Â±ÃªÂºÃ…
 				pos.at(c) = topics.size();
 				topics.push_back(c);
 				topic_stat.push_back(1);
 			}
 			else
 			{
-				topic_stat.at(pos.at(c))++;//¼ÇÂ¼Ö÷ÌâµÄ½ÚµãÊıÄ¿
+				topic_stat.at(pos.at(c))++;//Å’Ã‡Ã‚Å’Ã–Ã·ÃŒÃ¢ÂµÃ„Å“ÃšÂµÃ£ÃŠÃ½Ã„Â¿
 			}
 		}
 		int max_stat = 0, idx = 0;
@@ -2349,7 +2385,7 @@ template<typename D> void Layer<D>::label_instances()
 				idx = i;
 			}
 		}
-		labels.at(i) = topics.at(idx);//ÒÔ½ÚµãÊıÄ¿×î¶àµÄÖ÷Ìâ×÷Îª¸Ã²Í¹İµÄÖ÷Ìâ
+		labels.at(i) = topics.at(idx);//Ã’Ã”Å“ÃšÂµÃ£ÃŠÃ½Ã„Â¿Ã—Ã®Â¶Ã ÂµÃ„Ã–Ã·ÃŒÃ¢Ã—Ã·ÃÂªÅ¾ÃƒÂ²ÃÂ¹ÃÂµÃ„Ã–Ã·ÃŒÃ¢
 	}
 }
 

@@ -8,7 +8,7 @@
 #include "targetver.h"
 
 #include <stdio.h>
-#include <tchar.h>
+//#include <tchar.h>
 
 using namespace std;
 #ifndef TIME_COST
@@ -20,8 +20,8 @@ using namespace std;
 #ifndef LOAD_FROM_TXT
 #define LOAD_FROM_TXT
 #endif
-//#ifndef PRINT_FUNC_NAME
-//#define PRINT_FUNC_NAME
-//#endif
+#ifndef PRINT_FUNC_NAME
+#define PRINT_FUNC_NAME
+#endif
 
 // TODO:  在此处引用程序需要的其他头文件

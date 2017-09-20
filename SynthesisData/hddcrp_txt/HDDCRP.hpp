@@ -1,5 +1,5 @@
-#pragma once
-#include "StdAfx.h"
+//#pragma once
+//#include "StdAfx.h"
 #include "Layer.hpp"
 #include <time.h>
 #include <string>
@@ -162,6 +162,7 @@ template<class D> void HddCRP_Model<D>::initialize()
 	layers.back().log_alpha_group = 0.0;
 	cout << "intialize at the layer(back) : " << endl;
 	layers.back().initialize_link(1, 1);
+//cout<<"LINK OVER";
 	//layers.back().initialize_link(100, 1);
 	Layer<D>::initialize_base();
 	Layer<D>::bottom = &layers.at(0);

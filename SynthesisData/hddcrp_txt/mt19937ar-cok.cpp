@@ -43,7 +43,7 @@
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
-#include "StdAfx.h"
+//#include "StdAfx.h"
 #include "mt19937ar-cok.h"
 #include <stdio.h>
 

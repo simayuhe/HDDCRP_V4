@@ -1,5 +1,5 @@
-%´ÊÆµ¿ÉÊÓ»¯
-filename ='classqq100.txt';% '../..\result\classqq2.txt';
+%ï¿½ï¿½Æµï¿½ï¿½ï¿½Ó»ï¿½
+filename ='../classqq100.txt';% '../..\result\classqq2.txt';
 dict_size = 25;
 class_all=load(filename);
 for i=1:1:size(class_all,1)

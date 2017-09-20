@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+//#include "StdAfx.h"
 #include "string.h"
 #include "Multinomial.h"
 //#include "Tri_Mult.h"
